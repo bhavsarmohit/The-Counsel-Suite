@@ -12,6 +12,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
   <!-- endinject -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+
+
+
   <!-- Plugin css for this page -->
   <link rel="stylesheet" href="assets/vendors/flag-icon-css/css/flag-icon.min.css">
   <link rel="stylesheet" href="assets/vendors/jvectormap/jquery-jvectormap.css">
@@ -102,38 +109,52 @@
               
               <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-8-tablet">
                 <div class="mdc-card">
-                  <h6 class="card-title">Legal</h6>
+                  <h6 class="card-title">Legal Contracts</h6>
                   <div class="template-demo">
                     <center><button class="btn1 success1"><i class="fa fa-university fa-3x"></i></button></center>
-                    <h1 style="margin-top: 2rem;"class="mdc-typography--headline5">Select Category</h1>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Open this select menu</option>
-                      <option value="1">Cat1</option>
-                      <option value="2">Cat2</option>
-                      <option value="3">Cat3</option>
-                    </select>
+                    <h1 style="margin-top: 2rem;"class="mdc-typography--headline5">Select Act</h1>
+                    <select class="form-select livesearch" aria-label="Default select example">
+                      <option value="" selected-hidden>--Select Act--</option>
+                      <option>ACKNOWLEDGEMENT-RELEVANT DRAFTS</option>
+                      <option>ADOPTION-RELATED AGREEMENTS</option>
+                      <option>AFFIDAVIT-RELATED AGREEMENTS</option>
+                      <option>AGREEMENT-ALL RELEVANT TEMPLATES</option>
+                      <option>APPLICATION-RELATED TEMPLATES</option>
+                      <option>APPOINTMENT-RELATED LETTERS AND DRAFTS</option>
+                      <option>APPRENTICESHIP-RELATED DEEDS</option>
+                      <option>ARBITRATION-MISCELLANEOUS TEMPLATES</option>
+                      <option>ASSIGNMENT-ASSOCIATED TEMPLATES</option>
+                      <option>BANKING-RELATED REQUISITE FORMS</option>
+                      <option>BOND-RELATED MULTIFARIOUS DOCUMENTS</option>
+                      <option>CIVIL PLEADINGS-ESSENTIAL DOCUMENTS</option>
+                      <option>CLASSIFICATION OF OFFENCES-CONSOLIDATED LIST</option>
+                      <option> COMPANY-ALL RELEVANT DOCUMENTS</option>
+                      </select>
                     <button type="button" class="btn btn-primary btn_submit1">Submit</button>
                   </div>
                 </div>
               </div>
+              <script type="text/javascript">
+                $(".livesearch").chosen();
+            </script>
 
               <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-8-tablet">
                 <div class="mdc-card">
-                  <h6 class="card-title">Marketing</h6>
+                  <h6 class="card-title">Marketing Assets</h6>
                   <div class="template-demo">
                     <center><button class="btn1 success1"><i class="fa fa-bullhorn fa-3x"></i></button></center>                   
                      <h1 style="margin-top: 2rem;" class="mdc-typography--headline5">Select Category</h1>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Open this select menu</option>
-                      <option value="1">Cat1</option>
-                      <option value="2">Cat2</option>
-                      <option value="3">Cat3</option>
-                    </select>
+                     <select style="padding-top: 100px;" class="form-select livesearch" aria-label="Default select example">
+                      <option>Market1</option>
+                      <option>Market2</option>
+                      </select>
                     <button type="button" class="btn btn-primary btn_submit1">Submit</button>
                   </div>
                 </div>
               </div>
-            
+              <script type="text/javascript">
+                $(".livesearch").chosen();
+            </script>
                  
                 </div> 
               </div>
@@ -172,5 +193,6 @@
   <!-- Custom js for this page-->
   <script src="assets/js/dashboard.js"></script>
   <!-- End custom js for this page-->
+  
 </body>
 </html> 
