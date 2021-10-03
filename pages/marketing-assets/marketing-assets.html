@@ -27,6 +27,26 @@
   <link rel="stylesheet" href="../../assets/css/demo/style.css">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+
+  <style>
+    iframe{
+      width: 70%;
+      height: 90%;
+    }
+
+    .modal-content {
+    height: 48%;
+    background-color:#E9EAEF;
+    }
+    
+    .modal-header {
+    background-color: #2B1D5B;
+    padding:16px 16px;
+    color:#ececec;
+    border-bottom:2px dotted #002200;
+    }
+  </style>
+
 </head>
 <body>
 <script src="../../assets/js/preloader.js"></script>
@@ -248,6 +268,36 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+
+
+          <button type="button" class="btn fa fa-eye fa-1x" data-bs-toggle="modal" data-bs-target="#viewDoc">
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="viewDoc" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">SELECTED_ASSETS</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  
+                  <!-- Write Your code here dear mohit fucker-->
+                  <center>
+                    <div>
+                      <iframe src="https://docs.google.com/gview?url=http://ieee802.org/secmail/docIZSEwEqHFr.doc&embedded=true" frameborder="0">
+                      </iframe>
+                    </div>
+                  </center>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Download</button>
+                </div>
               </div>
             </div>
           </div>
