@@ -1,0 +1,40 @@
+/* ##### */
+/* Custom CSS */
+
+.btn1 {
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    padding: 14px 28px;
+    margin-bottom: 1rem;
+    font-size: 16px;
+    cursor: pointer;
+    height: 6rem;
+  
+  }
+  /* Green */
+  .success1 {
+    border-color: #3f51b5;
+    color: #3f51b5;
+  }
+  .success1:hover {
+    background-color: #3f51b5;
+    color: white;
+  }
+  .btn_submit1{
+    margin-top: 0.5rem;
+    float: right;
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+  }
+  .btn_submit1:hover{
+    margin-top: 0.5rem;
+    float: right;
+    background-color: #3f51b5;
+   border-color: #3f51b5; 
+  }
+  
+  /* ##### */
+  
+  /*# sourceMappingURL=../maps/demo/style.css.map */
+  
