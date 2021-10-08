@@ -20,6 +20,10 @@
     <link rel="stylesheet" href="assets/css/animate.css" />
     <link rel="stylesheet" href="assets/css/lineicons.css" />
     <link rel="stylesheet" href="assets/css/ud-styles.css" />
+
+    <link href="user/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="user/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="user/css/ruang-admin.min.css" rel="stylesheet">
   </head>
   <body>
     <!-- ====== Header Start ====== -->
@@ -126,47 +130,62 @@
     <!-- ====== Banner End ====== -->
 
     <!-- ====== Login Start ====== -->
-    <section class="ud-login">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="ud-login-wrapper">
-              <div class="ud-login-logo">
-                <img src="assets/images/logo/logo-2.svg" alt="logo" />
+      <!-- Login Content -->
+    <div class="container-login">
+      <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-12 col-md-9">
+          <div class="card shadow-sm my-5">
+            <div class="card-body p-0">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="login-form">
+                    <div class="text-center">
+                      <!-- <div class="ud-login-logo"> -->
+                        <img src="assets/images/logo/logo-2.svg" alt="logo" />
+                        <br><br>
+                        <!-- </div> -->
+                    </div>
+                    <form class="user">
+                      <div class="form-group">
+                        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
+                          placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
+                          <input type="checkbox" class="custom-control-input" id="customCheck">
+                          <label class="custom-control-label" for="customCheck">Remember
+                            Me</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <a href="user/index.html" class="btn btn-primary btn-block">Sign In</a>
+                      </div>
+                      <!-- <hr> -->
+                      <!-- <a href="index.html" class="btn btn-google btn-block">
+                        <i class="fab fa-google fa-fw"></i> Login with Google
+                      </a>
+                      <a href="index.html" class="btn btn-facebook btn-block">
+                        <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                      </a> -->
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                      Don't have an Account!
+                      <a class="font-weight-bold small" href="sign_up.html"><u>Sign Up</u></a>
+                    </div>
+                    <div class="text-center">
+                    </div>
+                  </div>
+                </div>
               </div>
-              <form class="ud-login-form">
-                <div class="ud-form-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email/username"
-                  />
-                </div>
-                <div class="ud-form-group">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="*********"
-                  />
-                </div>
-                <div class="ud-form-group">
-                    <a href="user/index.html" class="ud-main-btn w-100">Sign In</a>
-                </div>
-              </form>
-
-            
-
-              <a class="forget-pass" href="sign_in.html">
-                Forget Password?
-              </a>
-              <p class="signup-option">
-                Not a member yet? <a href="sign_up.html"> Sign Up </a>
-              </p>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
     <!-- ====== Login End ====== -->
 
     <!-- ====== Footer Start ====== -->
@@ -414,5 +433,10 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/main.js"></script>
+
+    <script src="user/vendor/jquery/jquery.min.js"></script>
+    <script src="user/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="user/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="user/js/ruang-admin.min.js"></script>
   </body>
 </html>
