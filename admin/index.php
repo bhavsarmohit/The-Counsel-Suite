@@ -23,11 +23,11 @@ else
     $a_name = $row[1];
     $a_email = $row[2];
     $a_profilepic = $row[6];
-        $_SESSION["id"] = $a_id;
-        $_SESSION["adminname"] = $a_name;
-        $_SESSION["adminemail"] = $a_email;
-        $_SESSION["adminprofilepic"] = $a_profilepic;
-        header("Location: dashboard.php"); 
+    $_SESSION["id"] = $a_id;
+    $_SESSION["adminname"] = $a_name;
+    $_SESSION["adminemail"] = $a_email;
+    $_SESSION["adminprofilepic"] = $a_profilepic;
+    header("Location: dashboard.php"); 
   }
   else
   {

@@ -1,6 +1,13 @@
+<?php
+session_start();
+if(isset($_SESSION["adminname"])) {
+  $admin_name=$_SESSION["adminname"];
+  $pic_url=$_SESSION["adminprofilepic"];
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +33,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="dashboard.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -43,8 +50,8 @@
         <div id="collapseCategory" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="Pages/add_category.html">Add</a>
-            <a class="collapse-item" href="Pages/view_category.html">View</a>
+            <a class="collapse-item" href="Pages/add_category.php">Add</a>
+            <a class="collapse-item" href="Pages/view_category.php">View</a>
           </div>
         </div>
       </li>
@@ -61,8 +68,8 @@
         <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="Pages/legal_contracts_upload.html">Add</a>
-            <a class="collapse-item" href="Pages/legal_contracts_view.html">View</a>
+            <a class="collapse-item" href="Pages/legal_contracts_upload.php">Add</a>
+            <a class="collapse-item" href="Pages/legal_contracts_view.php">View</a>
           </div>
         </div>
       </li>
@@ -76,8 +83,8 @@
         <div id="collapseForm" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Forms</h6> -->
-            <a class="collapse-item" href="Pages/marketing_assets_upload.html">Add</a>
-            <a class="collapse-item" href="Pages/marketing_assets_view.html">View</a>
+            <a class="collapse-item" href="Pages/marketing_assets_upload.php">Add</a>
+            <a class="collapse-item" href="Pages/marketing_assets_view.php">View</a>
           </div>
         </div>
       </li>
@@ -103,19 +110,14 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="img/boy.png" style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                <img class="img-profile rounded-circle" src="<?php echo $pic_url; ?>" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $admin_name;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Settings
-                </a>
-                
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -341,7 +343,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.html" class="btn btn-primary">Logout</a>
+                  <a href="logout.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>

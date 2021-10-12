@@ -1,3 +1,66 @@
+<?php
+error_reporting(0);
+session_start();
+require_once '../../database/config.php';
+if(isset($_SESSION["adminname"])) {
+  $admin_name=$_SESSION["adminname"];
+  $pic_url=$_SESSION["adminprofilepic"];
+}
+else
+{
+  header("Location:../index.php");
+}
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  $get_catid="select cat_id from categories";
+  $raw=mysqli_query($mysqli,$get_catid);
+  $row=mysqli_fetch_array($raw);
+  $r_catid = $row[0];
+  if($r_catid==null)
+  {
+    $r_catid= 0+1;
+  }
+  else{
+    
+    $r_catid=(int)$r_catid+1;
+    
+  }
+
+}
+if(isset($_POST['submit']))
+{
+  $catname=$_POST['cat_title'];
+  $parentcatname=$_POST['parent_cat'];
+  $adminid=$_SESSION["id"];
+  $add_category_sql="INSERT INTO `categories`(`cat_id`, `cat_name`, `cat_parentcat`, `admin_id`) VALUES (NULL,'$catname','$parentcatname','$adminid')";
+  if ($mysqli->query($add_category_sql) === TRUE) {
+    echo "New record created successfully";
+    
+    
+    $get_catid="select cat_id from categories";
+    $raw=mysqli_query($mysqli,$get_catid);
+    $row=mysqli_fetch_array($raw);
+    $r_catid = $row[0];
+
+    if($r_catid==null)
+    {
+      $r_catid= 0+1;
+    }
+    else{
+      $r_catid=(int)$r_catid+1;
+    }
+  } else {
+    echo "Error: " . $add_category_sql . "<br>" . $mysqli->error;
+  }
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +81,7 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
         <div class="sidebar-brand-icon">
           <img src="../img/logo/logo2.png">
         </div>
@@ -26,7 +89,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="../index.html">
+        <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -43,8 +106,8 @@
         <div id="collapseCategory" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="add_category.html">Add</a>
-            <a class="collapse-item" href="view_category.html">View</a>
+            <a class="collapse-item" href="add_category.php">Add</a>
+            <a class="collapse-item" href="view_category.php">View</a>
           </div>
         </div>
       </li>
@@ -61,8 +124,8 @@
         <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="legal_contracts_upload.html">Add</a>
-            <a class="collapse-item" href="legal_contracts_view.html">View</a>
+            <a class="collapse-item" href="legal_contracts_upload.php">Add</a>
+            <a class="collapse-item" href="legal_contracts_view.php">View</a>
           </div>
         </div>
       </li>
@@ -76,8 +139,8 @@
         <div id="collapseForm" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Forms</h6> -->
-            <a class="collapse-item" href="marketing_assets_upload.html">Add</a>
-            <a class="collapse-item" href="marketing_assets_view.html">View</a>
+            <a class="collapse-item" href="marketing_assets_upload.php">Add</a>
+            <a class="collapse-item" href="marketing_assets_view.php">View</a>
           </div>
         </div>
       </li>
@@ -101,19 +164,14 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="../img/boy.png" style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                <img class="img-profile rounded-circle" src="<?php echo $pic_url; ?>" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $admin_name;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Settings
-                </a>
-                
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -141,27 +199,28 @@
             <div class="card mb-3">
                 
                 <div class="card-body">
-                  <form>
+                  <form method="post">
                     <div class="form-group">
                         <label for="exampleFormControlReadonly">Category ID</label>
-                        <input class="form-control" type="text" placeholder="1111"
-                          id="exampleFormControlReadonly" readonly>
+                        <input class="form-control" type="text" name="cat_id" value="<?php echo $r_catid=(int)$r_catid+1;?>"
+                           readonly>
                       </div>
                     <div class="form-group">
                       <label for="exampleFormControlInput1">Category Title</label>
-                      <input type="text" class="form-control" id="exampleFormControlInput1"
-                        placeholder="Enter Category Name">
+                      <input type="text" class="form-control" name="cat_title"
+                        placeholder="Enter Category Name" required>
                     </div>
                     <div class="form-group">
                       <label for="exampleFormControlSelect1">Parent Category select</label>
-                      <select class="form-control" id="exampleFormControlSelect1">
-                        <option>Legal Contracts</option>
-                        <option>Marketing Assets</option>
+                      <select class="form-control" name="parent_cat" required>
+                        <option value="">--Select--</option>
+                        <option value="legal">Legal Contracts</option>
+                        <option value="marketing">Marketing Assets</option>
                       </select>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                          <button type="submit" class="btn btn-primary">Add</button>
+                          <button name="submit" input type="submit" class="btn btn-primary">Add</button>
                         </div>
                       </div>
                     
@@ -192,7 +251,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.html" class="btn btn-primary">Logout</a>
+                  <a href="../logout.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>
@@ -214,7 +273,7 @@
       <!-- Footer -->
     </div>
   </div>
-
+  
   <!-- Scroll to top -->
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
