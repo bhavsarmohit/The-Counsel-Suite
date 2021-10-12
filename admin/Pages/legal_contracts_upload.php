@@ -1,7 +1,7 @@
 <?php 
 session_start();
 $adminid=$_SESSION['id'];
-require_once '../database/config.php';
+require_once '../../database/config.php';
 $date = date('Y/m/d H:i:s');
 $mysqli = new mysqli($hn,$un,"",$db);
 if ($mysqli -> connect_errno) {
@@ -12,70 +12,35 @@ else
 {  
   //load classes
   
-  $classes = array();
-  $classid=array();
-  $sql = "SELECT * FROM `class_data` WHERE `classteacherid`='$adminid'";
+  $sql = "SELECT * FROM categories";
   $result = $mysqli->query($sql);
-  if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) 
-  {
-    //echo $row["classname"];
-    array_push($classes,$row["classname"]) ;
-    array_push($classid,$row["id"]) ;
-
-  }
-
-  } else 
-  {
-    echo "0 results";
-  }
+  
 }
 
-if (isset($_POST['submit']))
-{
-  $mysqli = new mysqli($hn,$un,"",$db);
+
+$mysqli = new mysqli($hn,$un,"",$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();
 }
-else
-{
-  $selected = $_POST['classnames'];
-  if($selected=="Select Class")
-  {
-    echo 'Please select Class';  
-  }
-  else
-  {
-    
-    //echo $selected;
-    $divison_name=$_POST['div_name'];
-    $selected_classid=$classid[$selected];
-    $selected_classname=$classes[$selected];
 
-    $check_division="select * from division_data where d_name='$divison_name' and d_adminid='$adminid' and d_classid='$selected_classid'";
-    $raw=mysqli_query($mysqli,$check_division);
-    
-    if(mysqli_num_rows($raw))
-    {
-      echo "Already Exists found";
-    }
-    else
-    {
-      $sql="INSERT INTO `division_data` (`id`, `d_name`, `d_classid`, `d_classname`, `d_adminid`) VALUES (NULL, '$divison_name', '$selected_classid', '$selected_classname', '$adminid');";
-      if($mysqli->query($sql) === TRUE)
-      {
-       echo "Data inserted";
-      }
-      else
-      {
-      echo "not inserted";  
-      }
-    }  
-    } 
-  } 
+if(isset($_POST['submit']))
+{
+  echo "button click";
+  $nameContract=$_POST['name_contract'];
+  $desc=$_POST['desc'];
+  $category=$_POST['category'];
+  $docPath=$_POST['filePath'];
+
+  $sql = "INSERT INTO `legal_contracts` (`c_id`, `c_name`, `c_description`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES (NULL, '$nameContract', '$desc', '$category', 'legal', '$docPath', '$date', '$adminid');";
+
+  if ($mysqli->query($sql) === TRUE) {
+    echo "New record created successfully";
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -222,34 +187,46 @@ else
             <div class="card mb-3">
                 
               <div class="card-body">
-                <form>
+                <form method="post">
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Name of Contract</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1"
-                      placeholder="Enter Name of Contract">
+                    <input type="text" class="form-control" id="name_contract" name="name_contract"
+                      placeholder="Enter Name of Contract" required>
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Description</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1"
-                      placeholder="Enter Contract Description">
+                    <input type="text" class="form-control" id="desc" name="desc"
+                      placeholder="Enter Contract Description" required>
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlSelect1">Select Category</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                      <option>Cat1</option>
-                      <option>Cat2</option>
+                    <select class="form-control" id="category" name="category" required>  
+                    <option value="">--SELECT CATEGORY--</option>
+                    <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo "<option value=".$row['cat_name'].">".$row['cat_name']."</option>";
+                          // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
+                        }
+                      } else {
+                        echo "0 results";
+                      } 
+                    ?> 
+                    <!-- <option>Cat1</option>
+                    <option>Cat2</option> -->
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlSelect1">Select Document</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="customFile">
+                      <input type="file" class="custom-file-input" id="filePath" name="filePath" required>
                       <label class="custom-file-label" for="customFile">Choose file</label>
                     </div>
                   </div>
                   <div class="form-group row">
                       <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Publish</button>
+                        <button name="submit" type="submit" class="btn btn-primary">Publish</button>
                       </div>
                     </div>
                   
