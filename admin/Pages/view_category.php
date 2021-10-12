@@ -1,3 +1,26 @@
+<?php
+session_start();
+require_once '../../database/config.php';
+if(isset($_SESSION["adminname"])) {
+  $admin_name=$_SESSION["adminname"];
+  $pic_url=$_SESSION["adminprofilepic"];
+}
+else
+{
+  header("Location:../index.php");
+}
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  $sql = "SELECT * FROM categories";
+  $result = $mysqli->query($sql);
+  
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +42,7 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
         <div class="sidebar-brand-icon">
           <img src="../img/logo/logo2.png">
         </div>
@@ -27,7 +50,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="../index.html">
+        <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -44,8 +67,8 @@
         <div id="collapseCategory" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="add_category.html">Add</a>
-            <a class="collapse-item" href="view_category.html">View</a>
+            <a class="collapse-item" href="add_category.php">Add</a>
+            <a class="collapse-item" href="view_category.php">View</a>
           </div>
         </div>
       </li>
@@ -62,8 +85,8 @@
         <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
-            <a class="collapse-item" href="legal_contracts_upload.html">Add</a>
-            <a class="collapse-item" href="legal_contracts_view.html">View</a>
+            <a class="collapse-item" href="legal_contracts_upload.php">Add</a>
+            <a class="collapse-item" href="legal_contracts_view.php">View</a>
           </div>
         </div>
       </li>
@@ -77,8 +100,8 @@
         <div id="collapseForm" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Forms</h6> -->
-            <a class="collapse-item" href="marketing_assets_upload.html">Add</a>
-            <a class="collapse-item" href="marketing_assets_view.html">View</a>
+            <a class="collapse-item" href="marketing_assets_upload.php">Add</a>
+            <a class="collapse-item" href="marketing_assets_view.php">View</a>
           </div>
         </div>
       </li>
@@ -103,8 +126,8 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="../img/boy.png" style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                <img class="img-profile rounded-circle" src="<?php echo $pic_url; ?>" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $admin_name;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
@@ -153,19 +176,37 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <td>1111</td>
-                        <td>ABCD</td>
-                        <td>Legal</td>
-                        <td><i class="fa fa-pencil" style="color: blue;" aria-hidden="true"></i>
-                      <i class="fa fa-trash-o" style="color: blue; padding-left: 1rem;" aria-hidden="true"></i></td>
-                      </tr>
+                      <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo "<tr>";
+                          echo "<td>".$row['cat_id']."</td>";
+                          echo "<td>".$row['cat_name']."</td>";
+                          echo "<td>".$row['cat_parentcat']."</td>";
+                          echo "<td>";
+                          echo "<i class=";
+                          echo "fa fa-pencil";
+                          echo "style=";
+                          echo "color: blue;";
+                          echo "aria-hidden=";
+                          echo "true";
+                          echo "></i>";
+                          echo "</td>";
+                          echo "</tr>";
+                        }
+                      } else {
+                        echo "0 results";
+                      }
+                      
+                      ?>
                     </tbody>
                   </table>
                 </div>
                 <div class="card-footer"></div>
               </div>
             </div>
-          
+            
           
           <!--Row-->
 
@@ -187,7 +228,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.html" class="btn btn-primary">Logout</a>
+                  <a href="../../logout.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>
