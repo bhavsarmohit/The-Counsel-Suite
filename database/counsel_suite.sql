@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 12, 2021 at 08:06 AM
+-- Generation Time: Oct 12, 2021 at 08:43 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -33,10 +33,17 @@ CREATE TABLE `admin` (
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `current_status` tinyint(1) NOT NULL,
+  `current_status` varchar(100) NOT NULL,
   `last_login` varchar(100) NOT NULL,
   `profile_pic` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `name`, `email`, `password`, `current_status`, `last_login`, `profile_pic`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin', 'false', '', 'https://picsum.photos/200');
 
 -- --------------------------------------------------------
 
@@ -207,7 +214,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contactus_data`

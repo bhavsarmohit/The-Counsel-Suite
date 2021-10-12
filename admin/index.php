@@ -1,3 +1,51 @@
+<?php
+session_start();
+require_once '../database/config.php';
+if (isset($_POST['submit']))
+{
+  $mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  $email=$_POST['email'];
+  $pass=$_POST['pass'];
+  //$pass=md5($pass);
+  $check_credentials="select * from admin where email='$email' and password='$pass'";
+  $raw=mysqli_query($mysqli,$check_credentials);
+  $count=mysqli_num_rows($raw);
+  if($count>0)
+  {
+    $row=mysqli_fetch_array($raw);
+    $a_id = $row[0];
+    $a_name = $row[1];
+    $a_email = $row[2];
+    $a_profilepic = $row[6];
+        $_SESSION["id"] = $a_id;
+        $_SESSION["adminname"] = $a_name;
+        $_SESSION["adminemail"] = $a_email;
+        $_SESSION["adminprofilepic"] = $a_profilepic;
+        header("Location: dashboard.php"); 
+  }
+  else
+  {
+    echo "not found";
+  } 
+}
+}
+
+if(isset($_SESSION["adminname"])) {
+  header("Location:dashboard.php");
+  }
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +55,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/logo.png" rel="icon">
-  <title>RuangAdmin - Login</title>
+  <title>Counsel Suite Admin - Login</title>
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
@@ -26,23 +74,16 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Login</h1>
                   </div>
-                  <form class="user">
+                  <form class="user" method="post">
                     <div class="form-group">
-                      <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                        placeholder="Enter Email Address">
+                      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                        placeholder="Enter Email Address" required>
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" required>
                     </div>
                     <div class="form-group">
-                      <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
-                        <input type="checkbox" class="custom-control-input" id="customCheck">
-                        <label class="custom-control-label" for="customCheck">Remember
-                          Me</label>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <a href="dashboard.html" class="btn btn-primary btn-block">Login</a>
+                    <button  name="submit" input type="submit"class="btn btn-primary btn-block">Login</button>
                     </div>
                   </form> 
                   <div class="text-center">
