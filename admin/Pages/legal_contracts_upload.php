@@ -1,3 +1,83 @@
+<?php 
+session_start();
+$adminid=$_SESSION['id'];
+require_once '../database/config.php';
+$date = date('Y/m/d H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{  
+  //load classes
+  
+  $classes = array();
+  $classid=array();
+  $sql = "SELECT * FROM `class_data` WHERE `classteacherid`='$adminid'";
+  $result = $mysqli->query($sql);
+  if ($result->num_rows > 0) {
+  // output data of each row
+  while($row = $result->fetch_assoc()) 
+  {
+    //echo $row["classname"];
+    array_push($classes,$row["classname"]) ;
+    array_push($classid,$row["id"]) ;
+
+  }
+
+  } else 
+  {
+    echo "0 results";
+  }
+}
+
+if (isset($_POST['submit']))
+{
+  $mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  $selected = $_POST['classnames'];
+  if($selected=="Select Class")
+  {
+    echo 'Please select Class';  
+  }
+  else
+  {
+    
+    //echo $selected;
+    $divison_name=$_POST['div_name'];
+    $selected_classid=$classid[$selected];
+    $selected_classname=$classes[$selected];
+
+    $check_division="select * from division_data where d_name='$divison_name' and d_adminid='$adminid' and d_classid='$selected_classid'";
+    $raw=mysqli_query($mysqli,$check_division);
+    
+    if(mysqli_num_rows($raw))
+    {
+      echo "Already Exists found";
+    }
+    else
+    {
+      $sql="INSERT INTO `division_data` (`id`, `d_name`, `d_classid`, `d_classname`, `d_adminid`) VALUES (NULL, '$divison_name', '$selected_classid', '$selected_classname', '$adminid');";
+      if($mysqli->query($sql) === TRUE)
+      {
+       echo "Data inserted";
+      }
+      else
+      {
+      echo "not inserted";  
+      }
+    }  
+    } 
+  } 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
