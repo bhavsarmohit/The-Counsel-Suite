@@ -183,22 +183,24 @@ else
                           echo "<tr>";
                           echo "<td>".$row['cat_id']."</td>";
                           echo "<td>".$row['cat_name']."</td>";
-                          echo "<td>".$row['cat_parentcat']."</td>";
+                          if($row['cat_parentcat']=="legal")
+                          {
+                            echo "<td>"."Legal Contracts"."</td>";
+                          }
+                          else if($row['cat_parentcat']=="marketing")
+                          {
+                            echo "<td>"."Marketing Assets"."</td>";
+                          }
+                          
                           echo "<td>";
-                          echo "<i class=";
-                          echo "fa fa-pencil";
-                          echo "style=";
-                          echo "color: blue;";
-                          echo "aria-hidden=";
-                          echo "true";
-                          echo "></i>";
+                          echo '<a href="edit_category.php?id='.$row["cat_id"].'"><i class="fa fa-pencil"style="color: blue;" aria-hidden="true"></i></a>';
+                          echo '<a href="delete_category.php?id='.$row["cat_id"].'"><i class="fa fa-trash-o" style="color: blue; padding-left: 1rem;" aria-hidden="true"></i></a>';
                           echo "</td>";
                           echo "</tr>";
                         }
                       } else {
                         echo "0 results";
-                      }
-                      
+                      }            
                       ?>
                     </tbody>
                   </table>

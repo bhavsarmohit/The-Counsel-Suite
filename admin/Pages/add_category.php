@@ -17,21 +17,11 @@ if ($mysqli -> connect_errno) {
 }
 else
 {
-  $get_catid="select cat_id from categories";
+  $get_catid="SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'counsel_suite' AND TABLE_NAME = 'categories'";
   $raw=mysqli_query($mysqli,$get_catid);
   $row=mysqli_fetch_array($raw);
   $r_catid = $row[0];
-  if($r_catid==null)
-  {
-    $r_catid= 0+1;
   }
-  else{
-    
-    $r_catid=(int)$r_catid+1;
-    
-  }
-
-}
 if(isset($_POST['submit']))
 {
   $catname=$_POST['cat_title'];
@@ -41,19 +31,11 @@ if(isset($_POST['submit']))
   if ($mysqli->query($add_category_sql) === TRUE) {
     echo "New record created successfully";
     
-    
-    $get_catid="select cat_id from categories";
-    $raw=mysqli_query($mysqli,$get_catid);
-    $row=mysqli_fetch_array($raw);
-    $r_catid = $row[0];
-
-    if($r_catid==null)
-    {
-      $r_catid= 0+1;
-    }
-    else{
-      $r_catid=(int)$r_catid+1;
-    }
+    $get_catid="SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'counsel_suite' AND TABLE_NAME = 'categories'";
+  $raw=mysqli_query($mysqli,$get_catid);
+  $row=mysqli_fetch_array($raw);
+  $r_catid = $row[0];
+  
   } else {
     echo "Error: " . $add_category_sql . "<br>" . $mysqli->error;
   }
@@ -202,7 +184,7 @@ if(isset($_POST['submit']))
                   <form method="post">
                     <div class="form-group">
                         <label for="exampleFormControlReadonly">Category ID</label>
-                        <input class="form-control" type="text" name="cat_id" value="<?php echo $r_catid=(int)$r_catid+1;?>"
+                        <input class="form-control" type="text" name="cat_id" value="<?php echo $r_catid;?>"
                            readonly>
                       </div>
                     <div class="form-group">
