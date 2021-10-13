@@ -26,7 +26,7 @@ if ($mysqli -> connect_errno) {
 
 if(isset($_POST['submit']))
 {
-  echo "button click";
+  // echo "button click";
   $nameContract=$_POST['name_contract'];
   $desc=$_POST['desc'];
   $category=$_POST['category'];
@@ -35,9 +35,11 @@ if(isset($_POST['submit']))
   $sql = "INSERT INTO `legal_contracts` (`c_id`, `c_name`, `c_description`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES (NULL, '$nameContract', '$desc', '$category', 'legal', '$docPath', '$date', '$adminid');";
 
   if ($mysqli->query($sql) === TRUE) {
-    echo "New record created successfully";
+    // echo "New record created successfully";
+    $showModalSuccessful = "true";
   } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    // echo "Error: " . $sql . "<br>" . $conn->error;
+    $showModalFailed = "true";
   }
 }
 
@@ -212,9 +214,7 @@ if(isset($_POST['submit']))
                       } else {
                         echo "0 results";
                       } 
-                    ?> 
-                    <!-- <option>Cat1</option>
-                    <option>Cat2</option> -->
+                    ?>
                     </select>
                   </div>
                   <div class="form-group">
@@ -239,7 +239,47 @@ if(isset($_POST['submit']))
        
           <!--Row-->
 
-          
+          <!-- Modal popup Successful -->
+          <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabelPopout">Congratulations!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+          <div class="modal-body">
+          <p>Successfully Published!</p>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+          </div>
+          </div>
+          </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabelPopout">Oops. Something went wrong!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+          <div class="modal-body">
+          <p>There was an error with your request!</p>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+          </div>
+          </div>
+          </div>
+          </div>
 
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
@@ -292,7 +332,25 @@ if(isset($_POST['submit']))
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="../js/demo/chart-area-demo.js"></script>  
+  <script src="../js/demo/chart-area-demo.js"></script> 
+  <?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+  ?> 
 </body>
 
 </html>
