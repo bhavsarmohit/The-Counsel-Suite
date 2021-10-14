@@ -2,10 +2,13 @@
 error_reporting(0);
 session_start();
 require_once '../../database/config.php';
+$msg="";
 if(isset($_SESSION["adminname"])) {
   $admin_name=$_SESSION["adminname"];
   $pic_url=$_SESSION["adminprofilepic"];
   $reterived_catid=$_GET['id'];
+  $a_email=$_SESSION["adminemail"];
+  $a_id=$_SESSION["id"];
  
 }
 else
@@ -31,18 +34,63 @@ if(isset($_POST['submit']))
   $catname=$_POST['cat_title'];
   $parentcatname=$_POST['parent_cat'];
   $adminid=$_SESSION["id"];
+  $check_catname="select * from categories where cat_name='$catname'";
+  $raw=mysqli_query($mysqli,$check_catname);
+  $count=mysqli_num_rows($raw);
+  if($count>1)
+  {
+    $msg="Category Already Exists.";
+    $showModalFailed="true";
+  }
+  else
+  {
   $update_sql = "UPDATE categories SET cat_name='$catname', cat_parentcat='$parentcatname' WHERE cat_id='$r_catid'";
 if ($mysqli->query($update_sql) === TRUE) {
-  echo "Record updated successfully";
+  $msg="Category Updated Successfully.";
+  $showModalSuccessful1="true";
   header("Location: view_category.php");
 } else {
-  echo "Error updating record: " . $mysqli->error;
+  $msg="Failed to update category.";
+  $showModalFailed1="true";
+}
+}
+}
+if (isset($_POST['upload'])) {
+  
+  $filename = $_FILES["uploadfile"]["name"];
+  $tempname = $_FILES["uploadfile"]["tmp_name"];    
+      $folder = "../img/profile_pic/".$a_id;
+
+      // Get all the submitted data from the form
+      $sql = "UPDATE admin SET profile_pic='$a_id' WHERE id='$a_id'";
+
+      // Execute query
+      mysqli_query($mysqli, $sql);
+        
+      // Now let's move the uploaded image into the folder: image
+      if (move_uploaded_file($tempname, $folder))  {
+        $msg="Profile Picture Updated Successfully.";
+          $showModalSuccessful = "true";
+      }else{
+        $msg="Failed to update Profile Picture.";
+        $showModalFailed = "true";
+    }
 }
 
- 
+if (isset($_POST['update'])) {
+  $admin_name = $_POST["admin_name"];
+  $admin_email = $_POST["admin_email"];    
+  $update_sql = "UPDATE admin SET name='$admin_name', email='$admin_email' WHERE id='$a_id'";
+  if ($mysqli->query($update_sql) === TRUE) {
+    $msg="Profile Updated Sucessfully.";
+    $showModalSuccessful = "true";
+    $_SESSION["adminname"]=$admin_name;
+    $_SESSION["adminemail"]=$admin_email;
+  } else {
+    $msg="Failed to update profile.";
+    $showModalFailed = "true";
+  }
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -148,11 +196,11 @@ if ($mysqli->query($update_sql) === TRUE) {
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="<?php echo $pic_url; ?>" style="max-width: 60px">
+                <img class="img-profile rounded-circle" src="<?php echo "../img/profile_pic/".$a_id;?>" style="max-width: 60px">
                 <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $admin_name;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" data-toggle="modal" data-target="#profileModal">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
@@ -217,7 +265,145 @@ if ($mysqli->query($update_sql) === TRUE) {
           
           <!--Row-->
 
-          
+          <!-- Modal Profile -->
+          <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">Profile</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <h6 class="m-0 font-weight-bold">Profile Picture</h6>
+                <form method="post" action="" enctype="multipart/form-data">
+                  <center>
+                  <img src="<?php echo "../img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 5rem;">
+                  <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
+                  <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button>
+                  <hr>
+                  </center>
+                </form>
+                  <h6 class="m-0 font-weight-bold" style="padding-bottom: 1rem;" >Personal Info</h6>
+                  <form method="post">
+                  <div class="form-group">
+                      <label for="exampleFormControlInput1">Name</label>
+                      <input type="text" class="form-control" name="admin_name"
+                        placeholder="Enter Name" value="<?php echo $admin_name; ?>" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleFormControlInput1">Email</label>
+                      <input type="email" class="form-control" name="admin_email"
+                        placeholder="Enter Email" value="<?php echo $a_email; ?>" required>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                          <button name="update" input type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                      </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Successful -->
+          <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p><?php echo$msg; ?></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p><?php echo$msg; ?></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+           <!-- Modal popup Successful -->
+           <div class="modal fade" id="popupModalSuccessful1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+              <img src="../img/check-circle.svg" style="width: 4rem; margin-left: 2rem;"/>
+              <center>
+            <h5 style="margin-left: 2rem; margin-top: 1rem; "><?php echo $msg;?> </h5>
+              </center>
+              </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+              <img src="../img/failed.svg" style="width: 4rem; margin-left: 2rem;"/>
+              <center>
+            <h5 style="margin-left: 2rem; margin-top: 1rem; "><?php echo $msg;?> </h5>
+              </center>
+              </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
 
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
@@ -280,6 +466,41 @@ if ($mysqli->query($update_sql) === TRUE) {
       document.getElementById("parent_cat").value = "marketing";     
     }
   </script>
+
+<?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalSuccessful1)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful1").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed1)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed1").modal("show");
+        });
+      </script>';
+    } 
+  ?>
 </body>
 
 </html>

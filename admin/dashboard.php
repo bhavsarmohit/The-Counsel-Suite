@@ -23,20 +23,21 @@ if (isset($_POST['upload'])) {
         
       // Now let's move the uploaded image into the folder: image
       if (move_uploaded_file($tempname, $folder))  {
-          echo"Image uploaded successfully";
+          $showProfilepicupdateModalSuccessful = "true";
       }else{
-          echo "Failed to upload image";
+        $showProfilepicupdateModalFailed = "true";
     }
 }
 if (isset($_POST['submit'])) {
-  
   $admin_name = $_POST["admin_name"];
   $admin_email = $_POST["admin_email"];    
   $update_sql = "UPDATE admin SET name='$admin_name', email='$admin_email' WHERE id='$a_id'";
   if ($mysqli->query($update_sql) === TRUE) {
-    echo "Profile updated successfully";
+    $showProfileupdateModalSuccessful = "true";
+    $_SESSION["adminname"]=$admin_name;
+    $_SESSION["adminemail"]=$admin_email;
   } else {
-    echo "Error updating record: " . $mysqli->error;
+    $showProfileupdateModalFailed = "true";
   }
 }
 ?>
@@ -375,7 +376,7 @@ if (isset($_POST['submit'])) {
                 <form method="post" action="" enctype="multipart/form-data">
                   <center>
                   <img src="<?php echo "img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 5rem;">
-                  <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile"/>
+                  <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
                   <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button>
                   <hr>
                   </center>
@@ -403,6 +404,90 @@ if (isset($_POST['submit'])) {
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Successful -->
+          <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Profile Updated Sucessfully.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Failed to update profile. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal profile pic Successful -->
+          <div class="modal fade" id="popuppicModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Profile Picture Sucessfully.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal profilepic Failed -->
+          <div class="modal fade" id="popuppicModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Failed to update profile picture. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
             </div>
           </div>
 
@@ -456,6 +541,42 @@ if (isset($_POST['submit'])) {
   <script src="js/ruang-admin.min.js"></script>
   <script src="vendor/chart.js/Chart.min.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>  
+
+  <?php			
+    if(!empty($showProfileupdateModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showProfileupdateModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showProfilepicupdateModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popuppicModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showProfilepicupdateModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popuppicModalFailed").modal("show");
+        });
+      </script>';
+    } 
+  ?>
+
 </body>
 
 </html>
