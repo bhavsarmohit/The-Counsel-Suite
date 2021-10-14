@@ -1,3 +1,54 @@
+<?php 
+session_start();
+$adminid=$_SESSION['id'];
+require_once '../../database/config.php';
+$date = date('Y/m/d H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{  
+  //load classes
+  
+  $sql = "SELECT * FROM categories";
+  $result = $mysqli->query($sql);
+  
+}
+
+
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+
+if(isset($_POST['submit']))
+{
+  // echo "button click";
+  $nameAsset=$_POST['nameAsset'];
+  $desc=$_POST['desc'];
+  $category=$_POST['category'];
+  $docPath=$_POST['filePath'];
+
+  $sql = "INSERT INTO `marketing_assets` (`c_id`, `c_name`, `c_description`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES (NULL, '$nameAsset', '$desc', '$category', 'marketing', '$docPath', '$date', '$adminid');";
+
+  if ($mysqli->query($sql) === TRUE) {
+    // echo "New record created successfully";
+
+    $showModalSuccessful = "true";
+
+
+
+  } else {
+    // echo "Error: " . $sql . "<br>" . $conn->error;
+    $showModalFailed = "true";
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +63,7 @@
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="../css/ruang-admin.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -140,34 +192,44 @@
             <div class="card mb-3">
                 
               <div class="card-body">
-                <form>
+                <form method="post">
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Name of Assets</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1"
+                    <input type="text" class="form-control" id="nameAsset" name="nameAsset" required
                       placeholder="Enter Name of Contract">
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Description</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1"
+                    <input type="text" class="form-control" id="desc" name="desc" required
                       placeholder="Enter Contract Description">
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlSelect1">Select Category</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                      <option>Cat1</option>
-                      <option>Cat2</option>
+                    <select class="form-control" id="category" name="category" required>
+                    <option value="">--SELECT CATEGORY--</option>
+                    <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo "<option value=".$row['cat_name'].">".$row['cat_name']."</option>";
+                          // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
+                        }
+                      } else {
+                        echo "0 results";
+                      } 
+                    ?>
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlSelect1">Select Document</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="customFile">
+                      <input type="file" class="custom-file-input" id="filePath" name="filePath" required>
                       <label class="custom-file-label" for="customFile">Choose file</label>
                     </div>
                   </div>
                   <div class="form-group row">
                       <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Publish</button>
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary">Publish</button>
                       </div>
                     </div>
                   
@@ -183,7 +245,47 @@
           
           <!--Row-->
 
-          
+          <!-- Modal popup Successful -->
+          <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabelPopout">Congratulations!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+          <div class="modal-body">
+          <p>Successfully Published!</p>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+          </div>
+          </div>
+          </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabelPopout">Oops. Something went wrong!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+          <div class="modal-body">
+          <p>There was an error with your request!</p>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+          </div>
+          </div>
+          </div>
+          </div>
 
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
@@ -237,6 +339,24 @@
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
   <script src="../js/demo/chart-area-demo.js"></script>  
+  <?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+  ?>
 </body>
 
 </html>
