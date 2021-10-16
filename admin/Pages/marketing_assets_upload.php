@@ -250,13 +250,15 @@ if(isset($_POST['submit']))
           aria-hidden="true">
           <div class="modal-dialog" role="document">
           <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="color:white; background-color:#4fc262;">
+          
           <h5 class="modal-title" id="exampleModalLabelPopout">Congratulations!</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
           </button>
           </div>
           <div class="modal-body">
+          <i class="bi bi-exclamation-triangle"></i>
           <p>Successfully Published!</p>
           </div>
           <div class="modal-footer">
