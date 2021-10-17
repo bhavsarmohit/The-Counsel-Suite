@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2021 at 02:09 PM
+-- Generation Time: Oct 17, 2021 at 02:46 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -134,6 +134,7 @@ CREATE TABLE `marketing_assests` (
   `c_id` int(255) NOT NULL,
   `c_name` varchar(100) NOT NULL,
   `c_description` varchar(255) NOT NULL,
+  `c_catid` varchar(100) NOT NULL,
   `c_category` varchar(100) NOT NULL,
   `c_parentcat` varchar(100) NOT NULL,
   `c_file` varchar(255) NOT NULL,
