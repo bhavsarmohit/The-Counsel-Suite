@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 12, 2021 at 08:43 AM
+-- Generation Time: Oct 17, 2021 at 02:09 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -43,7 +43,29 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `name`, `email`, `password`, `current_status`, `last_login`, `profile_pic`) VALUES
-(1, 'admin', 'admin@gmail.com', 'admin', 'false', '', 'https://picsum.photos/200');
+(1, 'sumit', 'admin@gmail.com', 'admin', 'false', '', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `cat_id` int(255) NOT NULL,
+  `cat_name` varchar(255) NOT NULL,
+  `cat_parentcat` varchar(100) NOT NULL,
+  `admin_id` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`cat_id`, `cat_name`, `cat_parentcat`, `admin_id`) VALUES
+(4, 'Test Cat3', 'legal', '1'),
+(6, 'TestCat6', 'legal', '1'),
+(7, 'Test Cat 7', 'legal', '1');
 
 -- --------------------------------------------------------
 
@@ -80,19 +102,6 @@ CREATE TABLE `favorites` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `legal_categories`
---
-
-CREATE TABLE `legal_categories` (
-  `cat_id` int(255) NOT NULL,
-  `cat_name` varchar(255) NOT NULL,
-  `cat_parentcat` varchar(100) NOT NULL,
-  `admin_id` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `legal_contracts`
 --
 
@@ -100,12 +109,20 @@ CREATE TABLE `legal_contracts` (
   `c_id` int(255) NOT NULL,
   `c_name` varchar(100) NOT NULL,
   `c_description` varchar(255) NOT NULL,
+  `c_catid` varchar(100) NOT NULL,
   `c_category` varchar(100) NOT NULL,
   `c_parentcat` varchar(100) NOT NULL,
   `c_file` varchar(255) NOT NULL,
   `c_timestamp` varchar(100) NOT NULL,
   `c_adminid` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `legal_contracts`
+--
+
+INSERT INTO `legal_contracts` (`c_id`, `c_name`, `c_description`, `c_catid`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES
+(53, 'Conference-template-A4', 'ghg', '4', 'Test Cat3', 'legal', 'Conference-template-A4.doc', '2021/10/17 14:07:26', '1');
 
 -- --------------------------------------------------------
 
@@ -122,19 +139,6 @@ CREATE TABLE `marketing_assests` (
   `c_file` varchar(255) NOT NULL,
   `c_timestamp` varchar(100) NOT NULL,
   `c_adminid` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `marketing_categories`
---
-
-CREATE TABLE `marketing_categories` (
-  `cat_id` int(255) NOT NULL,
-  `cat_name` varchar(255) NOT NULL,
-  `cat_parentcat` varchar(100) NOT NULL,
-  `admin_id` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -165,6 +169,12 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`cat_id`);
+
+--
 -- Indexes for table `contactus_data`
 --
 ALTER TABLE `contactus_data`
@@ -177,12 +187,6 @@ ALTER TABLE `favorites`
   ADD PRIMARY KEY (`f_id`);
 
 --
--- Indexes for table `legal_categories`
---
-ALTER TABLE `legal_categories`
-  ADD PRIMARY KEY (`cat_id`);
-
---
 -- Indexes for table `legal_contracts`
 --
 ALTER TABLE `legal_contracts`
@@ -193,12 +197,6 @@ ALTER TABLE `legal_contracts`
 --
 ALTER TABLE `marketing_assests`
   ADD PRIMARY KEY (`c_id`);
-
---
--- Indexes for table `marketing_categories`
---
-ALTER TABLE `marketing_categories`
-  ADD PRIMARY KEY (`cat_id`);
 
 --
 -- Indexes for table `users`
@@ -217,6 +215,12 @@ ALTER TABLE `admin`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `contactus_data`
 --
 ALTER TABLE `contactus_data`
@@ -229,28 +233,16 @@ ALTER TABLE `favorites`
   MODIFY `f_id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `legal_categories`
---
-ALTER TABLE `legal_categories`
-  MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `legal_contracts`
 --
 ALTER TABLE `legal_contracts`
-  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `marketing_assests`
 --
 ALTER TABLE `marketing_assests`
   MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `marketing_categories`
---
-ALTER TABLE `marketing_categories`
-  MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
