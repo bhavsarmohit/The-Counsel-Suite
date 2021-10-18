@@ -205,9 +205,16 @@ if (isset($_POST['update'])) {
             <div class="card mb-3">
               <div class="card-body">
                 <form id="uploadForm"  enctype="multipart/form-data">
-                <label>Choose File:</label>
-                <input type="file" name="file" id="fileInput" onchange="showname()"accept=".doc,.docx">
-                  <div class="form-group">
+                <!-- <label>Choose File:</label>
+                <input type="file" name="file" id="fileInput" onchange="showname()"accept=".doc,.docx"> -->
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select Document</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="fileInput" name="file"  onchange="showname()" accept=".doc,.docx" required>
+                      <label class="custom-file-label" for="fileInput">Choose file</label>
+                    </div>
+                  </div>
+                <div class="form-group">
                     <label for="exampleFormControlInput1">Name of Contract</label>
                     <input type="text" class="form-control" id="name_contract" name="name_contract"
                       placeholder="Enter Name of Contract"  >
@@ -460,6 +467,15 @@ $(document).ready(function(){
   <script src="../vendor/chart.js/Chart.min.js"></script>
   <script src="../js/demo/chart-area-demo.js"></script> 
  
+  <!-- file path -->
+  <script>
+      $('#fileInput').on('change',function(){
+          //get the file name
+          var fileName = $(this).val();
+          //replace the "Choose a file" label
+          $(this).next('.custom-file-label').html(fileName);
+      })
+  </script>
 
   <?php			
     if(!empty($showModalSuccessful)) {

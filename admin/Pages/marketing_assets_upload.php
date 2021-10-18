@@ -193,6 +193,13 @@ if(isset($_POST['submit']))
                 
               <div class="card-body">
                 <form method="post">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">Select Document</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="fileInput" name="file"  onchange="showname()" accept=".doc,.docx" required>
+                    <label class="custom-file-label" for="fileInput">Choose file</label>
+                  </div>
+                </div>
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Name of Assets</label>
                     <input type="text" class="form-control" id="nameAsset" name="nameAsset" required
@@ -219,13 +226,6 @@ if(isset($_POST['submit']))
                       } 
                     ?>
                     </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect1">Select Document</label>
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="filePath" name="filePath" required>
-                      <label class="custom-file-label" for="customFile">Choose file</label>
-                    </div>
                   </div>
                   <div class="form-group row">
                       <div class="col-sm-10">
@@ -340,7 +340,27 @@ if(isset($_POST['submit']))
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="../js/demo/chart-area-demo.js"></script>  
+  <script src="../js/demo/chart-area-demo.js"></script> 
+  
+  <script>
+    function showname () {
+      var name = document.getElementById('fileInput'); 
+      var filename=name.files.item(0).name.split(".", 1);
+      document.cookie='filenamecookie='+name.files.item(0).name; 
+      document.getElementById("nameAsset").value =filename;
+    };
+    </script>
+
+  <!-- file path -->
+  <script>
+      $('#fileInput').on('change',function(){
+          //get the file name
+          var fileName = $(this).val();
+          //replace the "Choose a file" label
+          $(this).next('.custom-file-label').html(fileName);
+      })
+  </script>
+
   <?php			
     if(!empty($showModalSuccessful)) {
       // CALL MODAL HERE
