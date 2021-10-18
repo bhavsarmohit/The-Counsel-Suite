@@ -2,6 +2,7 @@
 session_start();
 $adminid=$_SESSION['id'];
 $a_id=$_SESSION['id'];
+$reterived_catid=$_GET['id'];
 $admin_name=$_SESSION["adminname"];
 $a_email=$_SESSION["adminemail"];
 require_once '../../database/config.php';
@@ -13,8 +14,9 @@ if ($mysqli -> connect_errno) {
 }
 else
 {  
-  $sql = "SELECT * FROM categories WHERE cat_parentcat='marketing'";
-  $result = $mysqli->query($sql);
+  $get_catdata="SELECT * FROM `legal_contracts` WHERE `c_id`=$reterived_catid";
+  $raw=mysqli_query($mysqli,$get_catdata);
+  $row=mysqli_fetch_array($raw);
 }
 
 if (isset($_POST['upload'])) {
@@ -53,12 +55,35 @@ if (isset($_POST['update'])) {
   }
 }
 
+if (isset($_POST['submit'])) {
+  $c_id = $_POST["c_id"];
+  $c_name = $_POST["name_contract"];
+  $c_desc = $_POST["desc"];    
+  $check_cname="select * from legal_contracts where c_name='$c_name'";
+  $raw=mysqli_query($mysqli,$check_cname);
+  $count=mysqli_num_rows($raw);
+  if($count>1)
+  {
+    $msg="Contract Already Exists.";
+    $showModalFailed = "true";
+  }
+  else
+  {
+    $update_sql = "UPDATE legal_contracts SET c_name='$c_name', c_description='$c_desc' WHERE c_id='$c_id'";
+  if ($mysqli->query($update_sql) === TRUE) {
+    $msg="Contract Details Updated Sucessfully.";
+    $showModalSuccessful = "true";
+  } else {
+    $msg="Failed to update contract details.";
+    $showModalFailed = "true";
+  }
+  }
+}
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -192,70 +217,76 @@ if (isset($_POST['update'])) {
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add Marketing Assets</h1>
+            <h1 class="h3 mb-0 text-gray-800">Modify Legal Contracts</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="../">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Add Marketing Assets</li>
+              <li class="breadcrumb-item active" aria-current="page">Modify Legal Contracts</li>
             </ol>
           </div>
 
          
             <!-- write your code here -->
-            
-            <div class="card mb-3">
-              <div class="card-body">
-                <form id="uploadForm"  enctype="multipart/form-data">
-                <div class="form-group">
+            <div class="card mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Update Contract File</h6>
+                </div>
+                <div class="card-body">
+                  <form id="uploadForm" enctype="multipart/form-data">
+                  <div class="form-group">
+                        <label for="exampleFormControlReadonly">Contract ID</label>
+                        <input class="form-control" type="text" name="c_id" value="<?php echo $reterived_catid;?>"
+                           readonly>
+                      </div>
+                  <div class="form-group">
                   <label for="exampleFormControlSelect1">Select Document</label>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="fileInput" name="file"  onchange="showname()" accept=".doc,.docx" required>
                     <label class="custom-file-label" for="fileInput">Choose file</label>
                   </div>
                 </div>
+                        <input type="submit" class="btn btn-primary" name="submit" value="Upload"/>
+                        <div class="progress" style="margin-top: 1rem;" >
+                    <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="0"
+                      aria-valuemin="0" aria-valuemax="100">0%</div>
+                  </div>
+                  <div id="uploadStatus"></div>
+                    </form>
+                </div>
+              </div>
+
+            <div class="card mb-3">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Contract Details</h6>
+            </div>
+              <div class="card-body">
+                <form method="post"  enctype="multipart/form-data">
+                <div class="form-group">
+                        <label for="exampleFormControlReadonly">Contract ID</label>
+                        <input class="form-control" type="text" name="c_id" value="<?php echo $reterived_catid;?>"
+                           readonly>
+                      </div>
                   <div class="form-group">
-                    <label for="exampleFormControlInput1">Name of Asset</label>
-                    <input type="text" class="form-control" id="name_contract" name="name_contract"
-                      placeholder="Enter Name of Asset"  >
+                    <label for="exampleFormControlInput1">Name of Contract</label>
+                    <input type="text" class="form-control" id="name_contract" name="name_contract" value="<?php echo $row[1]; ?>"
+                      placeholder="Enter Name of Contract"  >
                   </div>
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Description</label>
-                    <input type="text" class="form-control" id="desc" name="desc"
-                      placeholder="Enter Asset Description" >
+                    <input type="text" class="form-control" id="desc" name="desc"value="<?php echo $row[2]; ?>"
+                      placeholder="Enter Contract Description" >
                   </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlSelect1">Select Category</label>
-                    <select class="form-control" id="category" name="category" >  
-                    <option value="">--SELECT CATEGORY--</option>
-                    <?php
-                      if ($result->num_rows > 0) {
-                        // output data of each row
-                        while($row = $result->fetch_assoc()) {
-                          echo '<option value="'.$row["cat_id"]."|".$row["cat_name"].'">'.$row["cat_name"].'</option>';
-                          //echo "<option value=".$row['cat_id']."|".$row['cat_name'].">".$row['cat_name']."</option>";
-                          // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
-                        }
-                      } 
-                    ?>
-                    </select>
-          
-                  </div>
-                  
                   <div class="form-group row">
                       <div class="col-sm-10">
                         <button name="submit" type="submit" class="btn btn-primary">Publish</button>
                       </div>
                     </div>
-                    <div class="progress" style="margin-top: 1rem;" >
-                    <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="0"
-                      aria-valuemin="0" aria-valuemax="100">0%</div>
-                  </div>
-                  <div id="uploadStatus"></div>
                   </div>
                 </form>
               </div>
             </div>
           </div>
-          <script>
+          <!-- file path -->
+  <script>
       $('#fileInput').on('change',function(){
           //get the file name
           var fileName = $(this).val();
@@ -281,7 +312,7 @@ $(document).ready(function(){
                 return xhr;
             },
             type: 'POST',
-            url: 'upload_marketing.php',
+            url: 'update_legal.php',
             data: new FormData(this),
             contentType: false,
             cache: false,
@@ -452,8 +483,6 @@ $(document).ready(function(){
             </span>
           </div>
         </div>
-
-    
       </footer>
       <!-- Footer -->
     </div>

@@ -45,14 +45,31 @@ if(isset($_POST['submit']))
   else
   {
   $update_sql = "UPDATE categories SET cat_name='$catname', cat_parentcat='$parentcatname' WHERE cat_id='$r_catid'";
-if ($mysqli->query($update_sql) === TRUE) {
-  $msg="Category Updated Successfully.";
-  $showModalSuccessful1="true";
-  header("Location: view_category.php");
-} else {
-  $msg="Failed to update category.";
-  $showModalFailed1="true";
-}
+  if($parentcatname=="legal")
+  {
+    $update_contract_sql = "UPDATE legal_contracts SET c_category='$catname' WHERE c_catid='$r_catid'";
+    if ($mysqli->query($update_sql) === TRUE && $mysqli->query($update_contract_sql) === TRUE) {
+      $msg="Category Updated Successfully.";
+      $showModalSuccessful1="true";
+      header("Location: view_category.php");
+    } else {
+      $msg="Failed to update category.";
+      $showModalFailed1="true";
+    }
+  }
+  if($parentcatname=="marketing")
+  {
+    $update_marketing_sql = "UPDATE marketing_assests SET c_category='$catname' WHERE c_catid='$r_catid'";
+    if ($mysqli->query($update_sql) === TRUE && $mysqli->query($update_marketing_sql) === TRUE) {
+      $msg="Category Updated Successfully.";
+      $showModalSuccessful1="true";
+      header("Location: view_category.php");
+    } else {
+      $msg="Failed to update category.";
+      $showModalFailed1="true";
+    }
+  }
+
 }
 }
 if (isset($_POST['upload'])) {

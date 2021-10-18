@@ -206,7 +206,7 @@ if (isset($_POST['update'])) {
               <div class="card-body">
                 <form id="uploadForm"  enctype="multipart/form-data">
                 <label>Choose File:</label>
-                <input type="file" name="file" id="fileInput" onchange="showname()"accept=".doc,.docx">
+               <input type="file" name="file" id="fileInput" onchange="showname()"accept=".doc,.docx">
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Name of Contract</label>
                     <input type="text" class="form-control" id="name_contract" name="name_contract"
