@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2021 at 02:46 PM
+-- Generation Time: Oct 20, 2021 at 02:04 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -63,9 +63,10 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`cat_id`, `cat_name`, `cat_parentcat`, `admin_id`) VALUES
-(4, 'Test Cat3', 'legal', '1'),
-(6, 'TestCat6', 'legal', '1'),
-(7, 'Test Cat 7', 'legal', '1');
+(6, 'Test Cat61', 'legal', '1'),
+(7, 'Test Cat 7', 'legal', '1'),
+(10, 'Marketing 1', 'marketing', '1'),
+(11, 'Marketing 2', 'marketing', '1');
 
 -- --------------------------------------------------------
 
@@ -122,7 +123,28 @@ CREATE TABLE `legal_contracts` (
 --
 
 INSERT INTO `legal_contracts` (`c_id`, `c_name`, `c_description`, `c_catid`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES
-(53, 'Conference-template-A4', 'ghg', '4', 'Test Cat3', 'legal', 'Conference-template-A4.doc', '2021/10/17 14:07:26', '1');
+(55, 'Conference-template-A', 'this is desc', '7', 'Test Cat 7', 'legal', '18U456_Report.docx', '2021/10/18 05:52:54', '1'),
+(56, 'stcl report', 'ngng', '4', 'Test Cat3', 'legal', 'stcl report.docx', '2021/10/18 05:53:02', '1'),
+(58, 'file1', 'ngng', '6', 'Test Cat61', 'legal', 'file1.docx', '2021/10/18 08:38:08', '1'),
+(59, 'Confidentiality Policy', 'new file lorem ispum', '6', 'Test Cat61', 'legal', 'Confidentiality Policy.docx', '2021/10/20 09:39:08', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `legal_downloads`
+--
+
+CREATE TABLE `legal_downloads` (
+  `date` varchar(255) NOT NULL,
+  `downloads` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `legal_downloads`
+--
+
+INSERT INTO `legal_downloads` (`date`, `downloads`) VALUES
+('20/10/2021', '2');
 
 -- --------------------------------------------------------
 
@@ -142,6 +164,50 @@ CREATE TABLE `marketing_assests` (
   `c_adminid` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `marketing_assests`
+--
+
+INSERT INTO `marketing_assests` (`c_id`, `c_name`, `c_description`, `c_catid`, `c_category`, `c_parentcat`, `c_file`, `c_timestamp`, `c_adminid`) VALUES
+(2, 'Marketing 1', 'This is marketing 1', '10', 'Marketing 1', 'marketing', 'Marketing 1.docx', '2021/10/20 13:35:37', '1'),
+(3, 'Marketing 2', 'This is marketing 2', '11', 'Marketing 2', 'marketing', 'Marketing 2.docx', '2021/10/20 13:35:59', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `marketing_downloads`
+--
+
+CREATE TABLE `marketing_downloads` (
+  `date` varchar(255) NOT NULL,
+  `downloads` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `marketing_downloads`
+--
+
+INSERT INTO `marketing_downloads` (`date`, `downloads`) VALUES
+('20/10/2021', '4');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `total_downloads`
+--
+
+CREATE TABLE `total_downloads` (
+  `date` varchar(255) NOT NULL,
+  `downloads` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `total_downloads`
+--
+
+INSERT INTO `total_downloads` (`date`, `downloads`) VALUES
+('20/10/2021', '8');
+
 -- --------------------------------------------------------
 
 --
@@ -156,8 +222,17 @@ CREATE TABLE `users` (
   `u_registertimestamp` varchar(100) NOT NULL,
   `u_lastlogin` varchar(100) NOT NULL,
   `u_profilepic` varchar(100) NOT NULL,
-  `u_loginstatus` varchar(100) NOT NULL
+  `u_loginstatus` varchar(100) NOT NULL,
+  `legal_downloads` varchar(100) NOT NULL,
+  `marketing_downloads` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`u_id`, `u_name`, `u_email`, `u_pass`, `u_registertimestamp`, `u_lastlogin`, `u_profilepic`, `u_loginstatus`, `legal_downloads`, `marketing_downloads`) VALUES
+(7, 'Sumit', 'k@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '2021-10-20', '20/10/21 12:32:33', 'boy.png', 'active', '0', '0');
 
 --
 -- Indexes for dumped tables
@@ -219,7 +294,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `contactus_data`
@@ -237,19 +312,19 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT for table `legal_contracts`
 --
 ALTER TABLE `legal_contracts`
-  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `marketing_assests`
 --
 ALTER TABLE `marketing_assests`
-  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `c_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `u_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

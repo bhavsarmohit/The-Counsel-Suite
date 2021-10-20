@@ -1,4 +1,47 @@
 
+<?php
+session_start();
+if(isset($_SESSION["u_id"])) {
+  header("Location: user/index.php"); 
+  }
+
+require_once 'database/config.php';
+$t=time();
+$time_stamp = date('d/m/y H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  if (isset($_POST['loginuser']))
+  {
+  $email=$_POST["email"];
+  $password=$_POST["pass"];
+  $password=md5($password);
+  $check_credentials="select * from users where u_email='$email' and u_pass='$password'";
+  $raw=mysqli_query($mysqli,$check_credentials);
+  $count=mysqli_num_rows($raw);
+  if($count>0)
+  {
+    $row=mysqli_fetch_array($raw);
+    $_SESSION["u_id"] = $row[0];
+    $_SESSION["u_name"] = $row[1];
+    $_SESSION["u_email"] = $row[2];
+    $_SESSION["u_profilepic"] = "profilepic/".$row[6];
+    $update_query="UPDATE USERS SET u_loginstatus='active',u_lastlogin='$time_stamp' WHERE u_id='$row[0]'";
+    $raw=mysqli_query($mysqli,$update_query);
+    header("Location: user/index.php"); 
+  }
+  else
+  {
+    $showModalFailed="true";
+  } 
+  }
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,10 +144,10 @@
               </div>
 
               <div class="navbar-btn d-none d-sm-inline-block">
-                <a href="sign_in.html" class="ud-main-btn ud-login-btn">
+                <a href="sign_in.php" class="ud-main-btn ud-login-btn">
                   Sign In
                 </a>
-                <a href="sign_up.html" class="ud-main-btn ud-white-btn">
+                <a href="sign_up.php" class="ud-main-btn ud-white-btn">
                   Sign Up
                 </a>
               </div>
@@ -145,23 +188,16 @@
                         <br><br>
                         <!-- </div> -->
                     </div>
-                    <form class="user">
+                    <form class="user" method="POST">
                       <div class="form-group">
-                        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                          placeholder="Username">
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                          placeholder="Email" required>
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" required>
                       </div>
                       <div class="form-group">
-                        <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
-                          <input type="checkbox" class="custom-control-input" id="customCheck">
-                          <label class="custom-control-label" for="customCheck">Remember
-                            Me</label>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <a href="user/index.html" class="btn btn-primary btn-block">Sign In</a>
+                        <button name="loginuser" id="loginuser" class="btn btn-primary btn-block">Sign In</button>
                       </div>
                       <!-- <hr> -->
                       <!-- <a href="index.html" class="btn btn-google btn-block">
@@ -174,7 +210,7 @@
                     <hr>
                     <div class="text-center">
                       Don't have an Account!
-                      <a class="font-weight-bold small" href="sign_up.html"><u>Sign Up</u></a>
+                      <a class="font-weight-bold small" href="sign_up.php"><u>Sign Up</u></a>
                     </div>
                     <div class="text-center">
                     </div>
@@ -187,7 +223,47 @@
       </div>
     </div>
     <!-- ====== Login End ====== -->
+    <!-- Modal popup Successful -->
+    <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Profile Updated Sucessfully.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
 
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Failed to Login. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
     <!-- ====== Footer Start ====== -->
     <footer class="ud-footer wow fadeInUp" data-wow-delay=".15s">
       <div class="shape shape-1">
@@ -438,5 +514,23 @@
     <script src="user/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="user/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="user/js/ruang-admin.min.js"></script>
+    <?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+    ?>
   </body>
 </html>

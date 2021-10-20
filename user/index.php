@@ -1,3 +1,45 @@
+<?php
+session_start();
+if(!isset($_SESSION["u_id"])) {
+  header("Location: ../sign_in.php"); 
+}
+require_once '../database/config.php';
+$time_stamp = date('d/m/y H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  $reterive_legal_cat = "SELECT * FROM categories WHERE cat_parentcat='legal'";
+  $result = $mysqli->query($reterive_legal_cat);
+  $reterive_marketing_cat = "SELECT * FROM categories WHERE cat_parentcat='marketing'";
+  $result1 = $mysqli->query($reterive_marketing_cat);
+}
+if (isset($_POST['view_legal'])) {
+  if (isset($_POST['legal'])) {
+    $selectd_cat=$_POST['legal'];
+    $arr = explode('|', $selectd_cat);
+    $cat_id=$arr[0];
+    $cat_name=$arr[1];
+    $_SESSION["cat_id"]=$cat_id;
+    $_SESSION["cat_name"]=$cat_name;
+    header("Location: pages/view_legal_contracts.php"); 
+ }
+}
+if (isset($_POST['view_marketing'])) {
+  if (isset($_POST['marketing'])) {
+    $selectd_cat=$_POST['marketing'];
+    $arr = explode('|', $selectd_cat);
+    $cat_id=$arr[0];
+    $cat_name=$arr[1];
+    $_SESSION["cat_id"]=$cat_id;
+    $_SESSION["cat_name"]=$cat_name;
+    header("Location: pages/view_marekting_assests.php"); 
+ }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +63,7 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <div class="sidebar-brand-icon">
           <img src="img/logo/logo2.png">
         </div>
@@ -29,7 +71,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="index.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -38,17 +80,25 @@
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="Pages/view_favorites.html">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="Pages/view_legal_favorites.php">Legal Contracts</a>
+            <a class="collapse-item" href="Pages/view_marketing_favorites.php">Marketing Assets</a>
+          </div>
+        </div>
         </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
         Help
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="Pages/contact_us.html">
+        <a class="nav-link " href="Pages/contact_us.php">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>Contact Us</span>
         </a>
@@ -116,15 +166,25 @@
               </div>
               <div class="card-body">
                 <center><button class="btn1 success1"><i class="fa fa-university fa-3x"></i></button></center>
+                <form method="POST">
                 <h6 class=" font-weight-bold "style="margin: bottom 200px; color:#3f51b5; ">Select Act</h6>   
-                <select style="padding-top: .4rem;" class="select2-single form-control" name="legal" id="select2Single">
-                  <option value="">Select</option>
-                  <option value="Aceh">Aceh</option>
-                  <option value="Sumatra Utara">Sumatra Utara</option>
-                  <option value="Sumatra Barat">Sumatra Barat</option>
+                <select style="padding-top: .4rem;" class="select2-single form-control" name="legal" id="select2Single"required>
+                <option value="">--Select--</option>
+                  <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo '<option value="'.$row["cat_id"]."|".$row["cat_name"].'">'.$row["cat_name"].'</option>';
+                          //echo "<option value=".$row['cat_id']."|".$row['cat_name'].">".$row['cat_name']."</option>";
+                          // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
+                        }
+                      } else {
+                        echo '<option value="">Not Found</option>';
+                      } 
+                    ?>
                 </select>      
-                <a href="Pages/view_legal_contracts.html"> <button type="submit" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button></a>
- 
+                <a href="Pages/view_legal_contracts.php"> <button type="submit" name="view_legal" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button></a>
+                </form>
               </div>
             </div>
           </div>
@@ -136,13 +196,24 @@
               <div class="card-body">
                 <center><button class="btn1 success1"><i class="fa fa-bullhorn fa-3x"></i></button></center>
                 <h6 class=" font-weight-bold "style="margin: bottom 200px; color:#3f51b5; ">Select Assets</h6>   
-                <select style="padding-top: .4rem;" class="select2-single form-control" name="marketing" id="select2Single1">
-                  <option value="">Select</option>
-                  <option value="Aceh">Aceh</option>
-                  <option value="Sumatra Utara">Sumatra Utara</option>
-                  <option value="Sumatra Barat">Sumatra Barat</option>
+                <form method="POST">
+                <select style="padding-top: .4rem;" class="select2-single form-control" name="marketing" id="select2Single1" required>
+                <option value="">--Select--</option>
+                  <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result1->fetch_assoc()) {
+                          echo '<option value="'.$row["cat_id"]."|".$row["cat_name"].'">'.$row["cat_name"].'</option>';
+                          //echo "<option value=".$row['cat_id']."|".$row['cat_name'].">".$row['cat_name']."</option>";
+                          // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
+                        }
+                      } else {
+                        echo '<option value="">Not Found</option>';
+                      } 
+                    ?>
                 </select>  
-             <a href="Pages/view_marekting_assests.html">   <button  type="submit" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button> </a>
+             <a href="Pages/view_marekting_assests.php">   <button  type="submit" name="view_marketing" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button> </a>
+                </form>
               </div>
             </div>
           </div>
@@ -167,7 +238,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.html" class="btn btn-primary">Logout</a>
+                  <a href="login.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>

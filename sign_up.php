@@ -1,4 +1,39 @@
-
+<?php
+require_once 'database/config.php';
+$t=time();
+$time_stamp=date("Y-m-d",$t);
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{
+  if (isset($_POST['signupuser']))
+  {
+    $name=$_POST["name"];
+    $email=$_POST["email"];
+    $password=$_POST["pass"];
+    $password=md5($password);
+    $check_email="select * from users where u_email='$email'";
+    $raw=mysqli_query($mysqli,$check_email);
+    $count=mysqli_num_rows($raw);
+    if($count>0)
+    {
+      $showModalFailed1="true";
+    }
+    else
+    {
+      $add_user="INSERT INTO `users`(`u_id`, `u_name`, `u_email`, `u_pass`, `u_registertimestamp`, `u_lastlogin`, `u_profilepic`, `u_loginstatus`, `legal_downloads`, `marketing_downloads`) VALUES (null,'$name','$email','$password','$time_stamp','NA','boy.png','unactive','0','0')";
+      if ($mysqli->query($add_user) === TRUE) {
+        $showModalSuccessful="true";
+      } else {
+        $showModalFailed="true";
+    }
+    }
+  }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -102,10 +137,10 @@
               </div>
 
               <div class="navbar-btn d-none d-sm-inline-block">
-                <a href="sign_up.html" class="ud-main-btn ud-login-btn">
+                <a href="sign_up.php" class="ud-main-btn ud-login-btn">
                   Sign Up
                 </a>
-                <a href="sign_in.html" class="ud-main-btn ud-white-btn">
+                <a href="sign_in.php" class="ud-main-btn ud-white-btn">
                   Sign In
                 </a>
               </div>
@@ -146,23 +181,20 @@
                         <br><br>
                         <!-- </div> -->
                     </div>
-                    <form class="user">
-                      <div class="form-group">
-                        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                          placeholder="Username">
+                    <form class="user" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp"
+                          placeholder="Name" required>
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password">
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                          placeholder="Email" required>
                       </div>
                       <div class="form-group">
-                        <div class="custom-control custom-checkbox small" style="line-height: 1.5rem;">
-                          <input type="checkbox" class="custom-control-input" id="customCheck">
-                          <label class="custom-control-label" for="customCheck">Remember
-                            Me</label>
-                        </div>
+                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" required>
                       </div>
                       <div class="form-group">
-                        <a href="index.html" class="btn btn-primary btn-block">Sign Up</a>
+                        <button type="submit" name="signupuser" class="btn btn-primary btn-block">Sign Up</button>
                       </div>
                       <!-- <hr> -->
                       <!-- <a href="index.html" class="btn btn-google btn-block">
@@ -175,7 +207,7 @@
                     <hr>
                     <div class="text-center">
                       Already have an Account!
-                      <a class="font-weight-bold small" href="sign_up.html"><u>Sign In</u></a>
+                      <a class="font-weight-bold small" href="sign_in.php"><u>Sign In</u></a>
                     </div>
                     <div class="text-center">
                     </div>
@@ -188,7 +220,68 @@
       </div>
     </div>
     <!-- ====== Login End ====== -->
+     <!-- Modal popup Successful -->
+     <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Congratulations</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>You have registered successfully.</p>
+            </div>
+            <div class="modal-footer">
+            <a href="sign_in.php" class="btn btn-outline-primary" data-dismiss="modal">Go to Login</a>
+            </div>
+            </div>
+            </div>
+          </div>
 
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Failed to update profile. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal popup already mail exist -->
+          <div class="modal fade" id="popupModalFailed1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Email is already exist. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
     <!-- ====== Footer Start ====== -->
     <footer class="ud-footer wow fadeInUp" data-wow-delay=".15s">
       <div class="shape shape-1">
@@ -439,6 +532,31 @@
     <script src="user/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="user/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="user/js/ruang-admin.min.js"></script>
-
+    <?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed1)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed1").modal("show");
+        });
+      </script>';
+    } 
+    ?>
   </body>
 </html>

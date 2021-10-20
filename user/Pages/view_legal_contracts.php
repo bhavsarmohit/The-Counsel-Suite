@@ -1,6 +1,25 @@
+<?php
+session_start();
+if(!isset($_SESSION["u_id"])) {
+  header("Location: ../../sign_in.php"); 
+}
+require_once '../../database/config.php';
+$time_stamp = date('d/m/y H:i:s');
+$cat_id=$_SESSION['cat_id'];
+$cat_name=$_SESSION['cat_name'];
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{ 
+  $get_catdata="SELECT * FROM legal_contracts WHERE c_catid='$cat_id'";
+  $result = $mysqli->query($get_catdata);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,7 +46,7 @@
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
         <div class="sidebar-brand-icon">
           <img src="../img/logo/logo2.png">
         </div>
@@ -35,7 +54,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="../index.html">
+        <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -44,7 +63,7 @@
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="view_favorites.html">
+        <a class="nav-link " href="view_favorites.php">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
@@ -54,7 +73,7 @@
         Help
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="contact_us.html">
+        <a class="nav-link " href="contact_us.php">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>Contact Us</span>
         </a>
@@ -106,7 +125,7 @@
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">SELECTED_ACT</h1>
+            <h1 class="h3 mb-0 text-gray-800"><?php echo $cat_name?></h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="../">Home</a></li>
               <li class="breadcrumb-item active" aria-current="page">Legal Contracts</li>
@@ -114,7 +133,7 @@
           </div>
 
           <div class="input-group mb-3"style="width: 13rem; float:right;">
-            <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <input type="text" class="form-control" placeholder="Search" name="myInput" id="myInput" onkeyup="searchFunction()"  aria-label="Recipient's username" aria-describedby="basic-addon2">
             <div class="input-group-append">
               <span class="input-group-text"  id="basic-addon2"><i class="fa fa-search"></i></span>
             </div>
@@ -130,7 +149,7 @@
               <!-- Simple Tables -->
               <div class="card">
                 <div class="table-responsive">
-                  <table class="table align-items-center table-flush">
+                  <table id="myTable" class="table align-items-center table-flush">
                     <thead class="thead-light">
                       <tr>
                         <th>ID</th>
@@ -140,12 +159,24 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <td>1111</td>
-                        <td>ABCD</td>
-                        <td>This is Description</td>
-                        <td><a href="download_file.html"><i class="fa fa-download" style="color: blue; cursor: pointer;" aria-hidden="true"></i></a>
-                      <i class="fa fa-star" style="color: blue; padding-left: 1rem; cursor: pointer;" aria-hidden="true"></i></td>
-                      </tr>
+                    <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo "<tr>";
+                          echo "<td>".$row['c_id']."</td>";
+                          echo "<td>".$row['c_name']."</td>";
+                          echo "<td>".$row['c_description']."</td>";
+                          echo "<td>";
+                          echo '<a href="download_legal_file.php?id='.$row["c_id"].'"><i class="fa fa-download"style="color: blue; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo '<a href="delete_category.php?id='.$row["c_id"].'"><i class="fa fa-star" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo "</td>";
+                          echo "</tr>";
+                        }
+                      } else {
+                        echo "0 results";
+                      }            
+                      ?>
                     </tbody>
                   </table>
                 </div>
@@ -208,6 +239,26 @@
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
   <script src="../js/demo/chart-area-demo.js"></script>  
+  <script>
+function searchFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
 </body>
 
 </html>
