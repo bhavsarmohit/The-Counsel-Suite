@@ -53,6 +53,46 @@ if (isset($_POST['update'])) {
   }
 }
 
+if (isset($_POST['updatePassword'])) {
+  // echo "done";
+
+  // $admin_name = $_POST["admin_name"];
+  // $admin_email = $_POST["admin_email"];  
+  $old_pass = $_POST["oldPassword"];
+  $new_pass = $_POST["newPassword"]; 
+
+  // echo $old_pass;
+  // echo $new_pass;
+  // echo $a_email;
+
+  $update_sql = "UPDATE admin SET password='$new_pass' WHERE (password='$old_pass' AND email='$a_email')";
+  if ($mysqli->query($update_sql) === TRUE) {
+    $check_status = "SELECT * FROM admin WHERE email='$a_email'";
+    $result = $mysqli->query($check_status);
+    if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+        if($row["password"] == $new_pass){
+          $showProfileupdateModalSuccessful = "true";
+        }else{
+          $showProfileupdateModalFailed = "true";
+        }
+        // echo '<option value="'.$row["cat_id"]."|".$row["cat_name"].'">'.$row["cat_name"].'</option>';
+        //echo "<option value=".$row['cat_id']."|".$row['cat_name'].">".$row['cat_name']."</option>";
+        // echo "id: " . $row["cat_id"]. " - Name: " . $row["cat_name"]. " " . $row["cat_parentcat"]. "<br>";
+      }
+    } else {
+      $showProfileupdateModalFailed = "true";
+    }
+    
+    // $_SESSION["adminname"]=$admin_name;
+    // $_SESSION["adminemail"]=$admin_email;
+  } else {
+    $showProfileupdateModalFailed = "true";
+  }
+
+
+}
 ?>
 
 
@@ -176,6 +216,11 @@ if (isset($_POST['update'])) {
                 <a class="dropdown-item"data-toggle="modal" data-target="#profileModal">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
+                </a>
+
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#changePasswordModal"">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Change Password
                 </a>
                 
                 <div class="dropdown-divider"></div>
@@ -411,6 +456,74 @@ $(document).ready(function(){
             <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
             </div>
             </div>
+            </div>
+          </div>
+
+          <!-- Modal change password -->
+          <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelchangepassword">Change Password</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <center>
+                <h6 class="m-0 font-weight-bold" style="padding-bottom: 1rem;" >Personal Info</h6>
+                </center>
+                <form method="post" action="" enctype="multipart/form-data">
+                  <center>
+                  <img src="<?php echo "../img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 150px;">
+                  <!-- <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
+                  <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button> -->
+                  <!-- <hr> -->
+                  </center>
+                </form>
+                  
+                  <form method="post">
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Name : </label>
+                    
+                    <label><?php echo $admin_name; ?></label>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Email : </label>
+                    <label><?php echo $a_email; ?></label>
+                    
+                  </div>
+                  <!-- <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button name="submit" input type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                  </div> -->
+                  <hr>
+
+                    <div class="form-group">
+                      <label for="oldPassword">Old Password</label>
+                      <input type="password" class="form-control" name="oldPassword"
+                        placeholder="" value="" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="newPassword">New Password</label>
+                      <input type="password" class="form-control" name="newPassword"
+                        placeholder="" value="" required>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="col-sm-10">
+                        <button name="updatePassword" input type="submit" class="btn btn-primary">Update Password</button>
+                      </div>
+                    </div>
+                    
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
             </div>
           </div>
 

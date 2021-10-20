@@ -505,7 +505,7 @@ if (isset($_POST['updatePassword'])) {
                 </center>
                 <form method="post" action="" enctype="multipart/form-data">
                   <center>
-                  <img src="<?php echo "img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 150px;">
+                  <img src="<?php echo "../img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 150px;">
                   <!-- <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
                   <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button> -->
                   <!-- <hr> -->
