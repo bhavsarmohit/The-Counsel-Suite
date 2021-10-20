@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2021 at 02:04 PM
+-- Generation Time: Oct 20, 2021 at 05:37 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -75,13 +75,20 @@ INSERT INTO `categories` (`cat_id`, `cat_name`, `cat_parentcat`, `admin_id`) VAL
 --
 
 CREATE TABLE `contactus_data` (
-  `userid` int(255) NOT NULL,
+  `userid` varchar(255) NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `mobno` varchar(100) NOT NULL,
   `msg` varchar(255) NOT NULL,
   `timestamp` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `contactus_data`
+--
+
+INSERT INTO `contactus_data` (`userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES
+('7', 'Sumit', 'k@gmail.com', '7768037116', 'dffs', '20/10/21 17:30:51');
 
 -- --------------------------------------------------------
 
@@ -94,11 +101,21 @@ CREATE TABLE `favorites` (
   `parent_catname` varchar(100) NOT NULL,
   `subcatid` varchar(100) NOT NULL,
   `sub_catname` varchar(100) NOT NULL,
+  `c_id` varchar(255) NOT NULL,
   `f_name` varchar(100) NOT NULL,
   `f_description` varchar(100) NOT NULL,
+  `f_file` varchar(255) NOT NULL,
   `f_adddate` varchar(100) NOT NULL,
   `f_userid` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `favorites`
+--
+
+INSERT INTO `favorites` (`f_id`, `parent_catname`, `subcatid`, `sub_catname`, `c_id`, `f_name`, `f_description`, `f_file`, `f_adddate`, `f_userid`) VALUES
+(4, 'legal', '6', 'Test Cat61', '59', 'Confidentiality Policy', 'new file lorem ispum', 'Confidentiality Policy.docx', '20/10/2021', '7'),
+(7, 'marketing', '10', 'Marketing 1', '2', 'Marketing 1', 'This is marketing 1', 'Marketing 1.docx', '20/10/2021', '7');
 
 -- --------------------------------------------------------
 
@@ -144,7 +161,7 @@ CREATE TABLE `legal_downloads` (
 --
 
 INSERT INTO `legal_downloads` (`date`, `downloads`) VALUES
-('20/10/2021', '2');
+('20/10/2021', '4');
 
 -- --------------------------------------------------------
 
@@ -206,7 +223,7 @@ CREATE TABLE `total_downloads` (
 --
 
 INSERT INTO `total_downloads` (`date`, `downloads`) VALUES
-('20/10/2021', '8');
+('20/10/2021', '10');
 
 -- --------------------------------------------------------
 
@@ -232,7 +249,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`u_id`, `u_name`, `u_email`, `u_pass`, `u_registertimestamp`, `u_lastlogin`, `u_profilepic`, `u_loginstatus`, `legal_downloads`, `marketing_downloads`) VALUES
-(7, 'Sumit', 'k@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '2021-10-20', '20/10/21 12:32:33', 'boy.png', 'active', '0', '0');
+(7, 'Sumit', 'k@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '2021-10-20', '20/10/21 15:33:35', 'boy.png', 'active', '0', '0');
 
 --
 -- Indexes for dumped tables
@@ -297,16 +314,10 @@ ALTER TABLE `categories`
   MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT for table `contactus_data`
---
-ALTER TABLE `contactus_data`
-  MODIFY `userid` int(255) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `f_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `f_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `legal_contracts`

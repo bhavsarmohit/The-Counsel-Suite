@@ -17,6 +17,7 @@ else
   $get_catdata="SELECT * FROM legal_contracts WHERE c_catid='$cat_id'";
   $result = $mysqli->query($get_catdata);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,13 +34,7 @@ else
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="../css/ruang-admin.min.css" rel="stylesheet">
-  
-  <script>
-    function sam()
-    {
-      alert("sam");
-    }
-  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body id="page-top">
@@ -63,10 +58,18 @@ else
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="view_favorites.php">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="view_legal_favorites.php">Legal Contracts</a>
+            <a class="collapse-item" href="view_marketing_favorites.php">Marketing Assets</a>
+          </div>
+        </div>
         </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
@@ -140,7 +143,7 @@ else
           </div>
       
          
-</br>
+          </br>
 
           <div style="margin-top: 2.2rem;" class="row mb-3">
            
@@ -169,7 +172,7 @@ else
                           echo "<td>".$row['c_description']."</td>";
                           echo "<td>";
                           echo '<a href="download_legal_file.php?id='.$row["c_id"].'"><i class="fa fa-download"style="color: blue; curosr:pointer;" aria-hidden="true"></i></a>';
-                          echo '<a href="delete_category.php?id='.$row["c_id"].'"><i class="fa fa-star" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo '<a href="add_legal_fav.php?id='.$row["c_id"].'"><i class="fa fa-star" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
                           echo "</td>";
                           echo "</tr>";
                         }
@@ -178,13 +181,13 @@ else
                       }            
                       ?>
                     </tbody>
-                  </table>
+                  </table> 
                 </div>
                 <div class="card-footer"></div>
               </div>
             </div> 
           </div>
-          
+          <div id='response'></div>
 
           <!--Row-->
 
@@ -238,7 +241,7 @@ else
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="../js/demo/chart-area-demo.js"></script>  
+  <script src="../js/demo/chart-area-demo.js"></script> 
   <script>
 function searchFunction() {
   var input, filter, table, tr, td, i, txtValue;

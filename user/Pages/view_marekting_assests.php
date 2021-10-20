@@ -63,10 +63,18 @@ else
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="view_favorites.php">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="view_legal_favorites.php">Legal Contracts</a>
+            <a class="collapse-item" href="view_marketing_favorites.php">Marketing Assets</a>
+          </div>
+        </div>
         </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
@@ -169,7 +177,7 @@ else
                           echo "<td>".$row['c_description']."</td>";
                           echo "<td>";
                           echo '<a href="download_marketing_file.php?id='.$row["c_id"].'"><i class="fa fa-download"style="color: blue; curosr:pointer;" aria-hidden="true"></i></a>';
-                          echo '<a href="delete_category.php?id='.$row["c_id"].'"><i class="fa fa-star" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo '<a href="add_marketing_fav.php?id='.$row["c_id"].'"><i class="fa fa-star" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
                           echo "</td>";
                           echo "</tr>";
                         }

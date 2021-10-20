@@ -15,12 +15,12 @@ require_once '../../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
 $mysqli = new mysqli($hn,$un,"",$db);
 if ($mysqli -> connect_errno) {
-  header("Location:view_legal_contracts.php"); 
+  header("Location:view_marekting_assests.php"); 
 }
 else
 { 
   
-$sql = "SELECT * FROM  legal_contracts WHERE c_id='$reterived_catid'";
+$sql = "SELECT * FROM  marketing_assests WHERE c_id='$reterived_catid'";
 $result = $mysqli->query($sql);
 $userid=$_SESSION["u_id"];
 if ($result->num_rows > 0) {
@@ -33,18 +33,18 @@ if ($result->num_rows > 0) {
      $ffile=$row["c_file"];
   }
 }
-$check_exisiting="SELECT * FROM  favorites WHERE c_id='$reterived_catid' AND f_userid='$userid' AND parent_catname='legal'"; 
+$check_exisiting="SELECT * FROM  favorites WHERE c_id='$reterived_catid' AND f_userid='$userid' AND parent_catname='marketing'"; 
 $result = $mysqli->query($check_exisiting);
 if ($result->num_rows > 0) {
-  header("Location:view_legal_contracts.php"); 
+  header("Location:view_marekting_assests.php"); 
 }
 else
 {
-  $add_fav="INSERT INTO `favorites`(`f_id`, `parent_catname`, `subcatid`, `sub_catname`, `c_id`, `f_name`, `f_description`,`f_file`, `f_adddate`, `f_userid`) VALUES (NULL,'legal','$subcatid','$subcatname','$reterived_catid','$fname','$fdescription','$ffile','$date','$userid')";
+  $add_fav="INSERT INTO `favorites`(`f_id`, `parent_catname`, `subcatid`, `sub_catname`, `c_id`, `f_name`, `f_description`,`f_file`, `f_adddate`, `f_userid`) VALUES (NULL,'marketing','$subcatid','$subcatname','$reterived_catid','$fname','$fdescription','$ffile','$date','$userid')";
   if ($mysqli->query($add_fav) === TRUE) {
-    header("Location:view_legal_contracts.php"); 
+    header("Location:view_marekting_assests.php"); 
  } else {
-  header("Location:view_legal_contracts.php"); 
+  header("Location:view_marekting_assests.php"); 
  }
 }
 }

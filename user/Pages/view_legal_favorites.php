@@ -1,6 +1,25 @@
+<?php
+session_start();
+if(!isset($_SESSION["u_id"])) {
+  header("Location: ../../sign_in.php"); 
+}
+$userid=$_SESSION["u_id"];
+require_once '../../database/config.php';
+$time_stamp = date('d/m/y H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{ 
+  $get_favdata="SELECT * FROM favorites WHERE f_userid='$userid' AND parent_catname='legal'";
+  $result = $mysqli->query($get_favdata);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,17 +28,19 @@
   <meta name="author" content="">
   <link href="../img/logo/logo.png" rel="icon">
   <title>The Counsel Suite</title>
-  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" ></script> 
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="../css/ruang-admin.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
         <div class="sidebar-brand-icon">
           <img src="../img/logo/logo2.png">
         </div>
@@ -27,7 +48,7 @@
       </a>
       <hr class="sidebar-divider my-0">
       <li class="nav-item active">
-        <a class="nav-link" href="../index.html">
+        <a class="nav-link" href="../index.php">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -36,17 +57,25 @@
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="view_favorites.html">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="view_legal_favorites.php">Legal Contracts</a>
+            <a class="collapse-item" href="view_marketing_favorites.php">Marketing Assets</a>
+          </div>
+        </div>
         </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
         Help
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="contact_us.html">
+        <a class="nav-link " href="contact_us.php">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>Contact Us</span>
         </a>
@@ -98,22 +127,22 @@
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">My Favorites</h1>
+            <h1 class="h3 mb-0 text-gray-800">My Legal Favorites</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="../">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Blank Page</li>
+              <li class="breadcrumb-item active" aria-current="page">Legal Contracts</li>
             </ol>
           </div>
 
           <div class="input-group mb-3"style="width: 13rem; float:right;">
-            <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <input type="text" class="form-control" placeholder="Search" name="myInput" id="myInput" onkeyup="searchFunction()"  aria-label="Recipient's username" aria-describedby="basic-addon2">
             <div class="input-group-append">
               <span class="input-group-text"  id="basic-addon2"><i class="fa fa-search"></i></span>
             </div>
           </div>
       
          
-</br>
+          </br>
 
           <div style="margin-top: 2.2rem;" class="row mb-3">
            
@@ -122,37 +151,44 @@
               <!-- Simple Tables -->
               <div class="card">
                 <div class="table-responsive">
-                  <table class="table align-items-center table-flush">
+                  <table id="myTable" class="table align-items-center table-flush">
                     <thead class="thead-light">
                       <tr>
                         <th>ID</th>
                         <th>Name of Contract</th>
                         <th>Description</th>
-                        <th>Type</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                        <td>1111</td>
-                        <td>ABCD</td>
-                        <td>This is Description</td>
-                        <td>Legal</td>
-                        <td><a href="download_file.html"><i class="fa fa-download" style="color: blue; cursor: pointer;" aria-hidden="true"></i></a>
-                      <i class="fa fa-trash" style="color: blue; padding-left: 1rem;" aria-hidden="true"></i></td>
-                      </tr>
+                    <?php
+                      if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                          echo "<tr>";
+                          echo "<td>".$row['f_id']."</td>";
+                          echo "<td>".$row['f_name']."</td>";
+                          echo "<td>".$row['f_description']."</td>";
+                          echo "<td>";
+                          echo '<a href="download_legal_file1.php?id='.$row["c_id"].'"><i class="fa fa-download"style="color: blue; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo '<a href="remove_fav.php?id='.$row["f_id"].'"><i class="fa fa-trash" style="color: blue; padding-left: 1rem; curosr:pointer;" aria-hidden="true"></i></a>';
+                          echo "</td>";
+                          echo "</tr>";
+                        }
+                      } else {
+                        echo "0 results";
+                      }            
+                      ?>
                     </tbody>
-                  </table>
+                  </table> 
                 </div>
                 <div class="card-footer"></div>
               </div>
-            </div>
-            
-            
-            
+            </div> 
           </div>
-          <!--Row-->
+          <div id='response'></div>
 
-          
+          <!--Row-->
 
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
@@ -204,7 +240,27 @@
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="../js/demo/chart-area-demo.js"></script>  
+  <script src="../js/demo/chart-area-demo.js"></script> 
+  <script>
+function searchFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
 </body>
 
 </html>
