@@ -471,6 +471,25 @@ $(document).ready(function(){
   <script src="../vendor/chart.js/Chart.min.js"></script>
   <script src="../js/demo/chart-area-demo.js"></script> 
  
+  
+  <script>
+    function showname () {
+      var name = document.getElementById('fileInput'); 
+      var filename=name.files.item(0).name.split(".", 1);
+      document.cookie='filenamecookie='+name.files.item(0).name; 
+      document.getElementById("nameAsset").value =filename;
+    };
+    </script>
+
+  <!-- file path -->
+  <script>
+      $('#fileInput').on('change',function(){
+          //get the file name
+          var fileName = $(this).val();
+          //replace the "Choose a file" label
+          $(this).next('.custom-file-label').html(fileName);
+      })
+  </script>
 
   <?php			
     if(!empty($showModalSuccessful)) {
