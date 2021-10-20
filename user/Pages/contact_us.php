@@ -1,3 +1,36 @@
+<?php
+session_start();
+if(!isset($_SESSION["u_id"])) {
+  header("Location: ../../sign_in.php"); 
+}
+$userid=$_SESSION["u_id"];
+require_once '../../database/config.php';
+$time_stamp = date('d/m/y H:i:s');
+$mysqli = new mysqli($hn,$un,"",$db);
+if ($mysqli -> connect_errno) {
+  echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
+  exit();
+}
+else
+{ 
+  if(isset($_POST['submit']))
+{
+  $fname=$_SESSION['u_name'];
+  $femail=$_SESSION['u_email'];
+  $fmobno=$_POST['mobno'];
+  $msg=$_POST['msg'];
+  $add_contact="INSERT INTO `contactus_data`(`userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES ('$userid','$fname','$femail','$fmobno','$msg','$time_stamp')";
+  //$add_contact="INSERT INTO contactus_data (userid,name,email,mobno.msg,timestamp) VALUES('$userid','$fname','$femail','$fmobno','$msg','$time_stamp')";
+  if ($mysqli->query($add_contact) === TRUE) {
+    $showModalSuccessful="true";
+  } else {
+    $showModalFailed="true";
+  }
+}
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,10 +68,18 @@
         Documents
       </div>
       <li class="nav-item">
-        <a class="nav-link " href="view_favorites.html">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
           <i class="far fa-fw fa-window-maximize"></i>
           <span>My Favorites</span>
         </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="view_legal_favorites.php">Legal Contracts</a>
+            <a class="collapse-item" href="view_marketing_favorites.php">Marketing Assets</a>
+          </div>
+        </div>
         </li>
       <hr class="sidebar-divider">
       <div class="sidebar-heading">
@@ -112,22 +153,22 @@
                 <!-- <h6 class="m-0 font-weight-bold text-primary">General Element</h6> -->
               <!-- </div> -->
               <div class="card-body">
-                <form>
+                <form method="post">
                   <div class="form-group">
                     <label for="exampleFormControlInput1">Name</label>
-                    <input class="form-control mb-3" type="text" placeholder="Your Name">
+                    <input class="form-control mb-3" type="text" placeholder="Your Name"id="name" name="name1" value="<?php echo $_SESSION["u_name"];?>" disabled required>
 
                     <label for="exampleFormControlInput1 mb-3">Email address</label>
-                    <input type="email" class="form-control mb-3" id="exampleFormControlInput1" placeholder="name@example.com">
+                    <input type="email" class="form-control mb-3" id="email" placeholder="name@example.com" name="email" value="<?php echo $_SESSION["u_email"];?>" disabled required>
                     
                     <label for="exampleFormControlInput1">Mobile No.</label>
-                    <input class="form-control mb-3" type="text">
+                    <input class="form-control mb-3" type="number" name="mobno" required>
 
                     <label for="exampleFormControlTextarea1">Message</label>
-                    <textarea class="form-control mb-3" id="exampleFormControlTextarea1" rows="3" placeholder="Write your message here..."></textarea>
+                    <textarea class="form-control mb-3" id="exampleFormControlTextarea1" rows="3" placeholder="Write your message here..." name="msg" required></textarea>
                     
                     
-                    <button  type="submit" class="btn btn-primary">Submit</button>
+                    <button  type="submit" name="submit" class="btn btn-primary">Submit</button>
                     
                   </div>
                   
@@ -141,7 +182,47 @@
           <!--Row-->
 
           
+        <!-- Modal popup Successful -->
+        <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Thanks for contacting.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
 
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Failed to submit. Try Again.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
             aria-hidden="true">
@@ -186,13 +267,31 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
+ 
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="../js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
   <script src="../js/demo/chart-area-demo.js"></script>  
+  <?php			
+    if(!empty($showModalSuccessful)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalSuccessful").modal("show");
+        });
+      </script>';
+    } 
+    if(!empty($showModalFailed)) {
+      // CALL MODAL HERE
+      echo '<script type="text/javascript">
+        $(document).ready(function(){
+          $("#popupModalFailed").modal("show");
+        });
+      </script>';
+    } 
+    ?>
 </body>
 
 </html>

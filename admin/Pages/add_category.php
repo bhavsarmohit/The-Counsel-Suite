@@ -318,7 +318,7 @@ if (isset($_POST['update'])) {
             </button>
             </div>
             <div class="modal-body">
-            <p>Profile Updated Sucessfully.</p>
+            <p>Category Added Sucessfully.</p>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
@@ -339,7 +339,7 @@ if (isset($_POST['update'])) {
             </button>
             </div>
             <div class="modal-body">
-            <p>Failed to update profile. Try Again.</p>
+            <p>Failed to add category. Try Again.</p>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
