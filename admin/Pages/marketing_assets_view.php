@@ -155,8 +155,6 @@ if (isset($_POST['submit'])) {
           </button>
           <ul class="navbar-nav ml-auto">
             
-            
-            
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -225,7 +223,7 @@ if (isset($_POST['submit'])) {
                           echo "</tr>";
                         }
                       } else {
-                        echo "No Records Found.";
+                        // echo "No Records Found.";
                       }            
                       ?>
                     </tbody>
