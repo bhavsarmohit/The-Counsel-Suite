@@ -277,7 +277,7 @@ else
             <p>Email is already exist. Try Again.</p>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            <a href="sign_up.php" class="btn btn-outline-primary" data-dismiss="modal">Close</a>
             </div>
             </div>
             </div>
