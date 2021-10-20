@@ -541,7 +541,7 @@ if (isset($_POST['updatePassword'])) {
 
           
 
-          <!-- Modal Profile -->
+          <!-- Modal change password -->
           <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -558,7 +558,7 @@ if (isset($_POST['updatePassword'])) {
                 </center>
                 <form method="post" action="" enctype="multipart/form-data">
                   <center>
-                  <img src="<?php echo "img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="300x300" style="width: 20rem;">
+                  <img src="<?php echo "img/profile_pic/".$a_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 150px;">
                   <!-- <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
                   <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button> -->
                   <!-- <hr> -->
@@ -607,6 +607,7 @@ if (isset($_POST['updatePassword'])) {
                 </div>
               </div>
             </div>
+          </div>
 
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
