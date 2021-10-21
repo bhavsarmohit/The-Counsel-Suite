@@ -19,11 +19,12 @@ else
   $femail=$_SESSION['u_email'];
   $fmobno=$_POST['mobno'];
   $msg=$_POST['msg'];
-  $add_contact="INSERT INTO `contactus_data`(`userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES ('$userid','$fname','$femail','$fmobno','$msg','$time_stamp')";
+  $add_contact="INSERT INTO `contactus_data`(`id`,`userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES (NULL,'$userid','$fname','$femail','$fmobno','$msg','$time_stamp')";
   //$add_contact="INSERT INTO contactus_data (userid,name,email,mobno.msg,timestamp) VALUES('$userid','$fname','$femail','$fmobno','$msg','$time_stamp')";
   if ($mysqli->query($add_contact) === TRUE) {
     $showModalSuccessful="true";
   } else {
+    //echo "Error: " . $add_contact . "<br>" . $mysqli->error;
     $showModalFailed="true";
   }
 }
