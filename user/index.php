@@ -1,21 +1,31 @@
 <?php
+
 header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 session_start();
-if(!isset($_SESSION["u_id"])) {
-  header("Location: ../sign_in.php"); 
-}
-$msg="";
-$u_id=$_SESSION["u_id"];
-//$profilepicurl=$_SESSION["u_profilepic"];
-$username=$_SESSION["u_name"];
-$useremail=$_SESSION["u_email"];
 require_once '../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
 $mysqli = new mysqli($hn,$un,"",$db);
+$u_id=$_SESSION["u_id"];
+if(!isset($_SESSION["u_id"])) {
+  $update_sql = "UPDATE users SET u_loginstatus='unactive' WHERE u_id='$u_id'";
+    if ($mysqli->query($update_sql) === TRUE) {
+        session_start();
+        unset($_SESSION["u_id"]);
+        unset($_SESSION["u_name"]);
+        unset($_SESSION["u_email"]);
+        unset($_SESSION["u_profilepic"]);
+        header("Location:../sign_in.php");
+    } 
+}
+$msg="";
+
+//$profilepicurl=$_SESSION["u_profilepic"];
+$username=$_SESSION["u_name"];
+$useremail=$_SESSION["u_email"];
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();
@@ -80,6 +90,36 @@ if (isset($_POST['update_profile'])) {
     $msg="Failed to Update Profie.";
     $showModalFailed="true";
   }
+}
+if (isset($_POST['change_pass'])) {
+  $cur_pass="";
+  $sql = "SELECT * FROM users";
+  $result = $mysqli->query($sql);
+  if ($result->num_rows > 0) {
+  // output data of each row
+  while($row = $result->fetch_assoc()) {
+    $cur_pass=  $row["u_pass"];
+  }
+  $oldPass=$_POST["oldpass"];
+  $newPass=$_POST["newpass"];
+  if($cur_pass==md5($oldPass))
+  {
+    $newPass=md5($newPass);
+    $update_sql = "UPDATE users SET u_pass='$newPass' WHERE u_id='$u_id'";
+    if ($mysqli->query($update_sql) === TRUE) {
+      $showModalSuccessful="true";
+      $msg="Password Changed Successfully.";
+    } else {
+      $msg="Failed to Chanage Password.";
+      $showModalFailed="true";
+    }
+  }
+  else{
+    $msg="Please enter valid current password.";
+    $showModalFailed="true";
+  }
+} 
+ 
 }
 ?>
 <!DOCTYPE html>
@@ -310,7 +350,7 @@ if (isset($_POST['update_profile'])) {
             </div>
           </div>
       
-       <!-- Modal Profile -->
+       <!-- Modal password -->
        <div class="modal fade" id="changepassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -324,13 +364,13 @@ if (isset($_POST['update_profile'])) {
                 <div class="modal-body">
                   <form method="post">
                   <div class="form-group">
-                      <label for="exampleFormControlInput1">Old Password</label>
-                      <input type="password" class="form-control" name="username"
+                      <label for="exampleFormControlInput1">Current Password</label>
+                      <input type="password" class="form-control" name="oldpass"
                         placeholder="Enter Old Password" required>
                     </div>
                     <div class="form-group">
                       <label for="exampleFormControlInput1">New Password</label>
-                      <input type="password" class="form-control" name="useremail"
+                      <input type="password" class="form-control" name="newpass"
                         placeholder="Enter New Password" required>
                     </div>
                     <div class="form-group row">
@@ -404,7 +444,7 @@ if (isset($_POST['update_profile'])) {
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.php" class="btn btn-primary">Logout</a>
+                  <a href="logout.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2021 at 05:37 PM
+-- Generation Time: Oct 21, 2021 at 10:36 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -75,6 +75,7 @@ INSERT INTO `categories` (`cat_id`, `cat_name`, `cat_parentcat`, `admin_id`) VAL
 --
 
 CREATE TABLE `contactus_data` (
+  `id` int(255) NOT NULL,
   `userid` varchar(255) NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -87,8 +88,10 @@ CREATE TABLE `contactus_data` (
 -- Dumping data for table `contactus_data`
 --
 
-INSERT INTO `contactus_data` (`userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES
-('7', 'Sumit', 'k@gmail.com', '7768037116', 'dffs', '20/10/21 17:30:51');
+INSERT INTO `contactus_data` (`id`, `userid`, `name`, `email`, `mobno`, `msg`, `timestamp`) VALUES
+(1, '', 'Sumit', 'k@gmail.com', '7768037116', 'dffs', '20/10/21 17:30:51'),
+(2, '7', 'Sumit', 'k@gmail.com', '7768037116', 'ffgfgs', '21/10/21 04:48:22'),
+(3, '7', 'Sumit ', 'k@gmail.com', '1234567890', 'sasas', '21/10/21 10:13:56');
 
 -- --------------------------------------------------------
 
@@ -114,8 +117,9 @@ CREATE TABLE `favorites` (
 --
 
 INSERT INTO `favorites` (`f_id`, `parent_catname`, `subcatid`, `sub_catname`, `c_id`, `f_name`, `f_description`, `f_file`, `f_adddate`, `f_userid`) VALUES
-(4, 'legal', '6', 'Test Cat61', '59', 'Confidentiality Policy', 'new file lorem ispum', 'Confidentiality Policy.docx', '20/10/2021', '7'),
-(7, 'marketing', '10', 'Marketing 1', '2', 'Marketing 1', 'This is marketing 1', 'Marketing 1.docx', '20/10/2021', '7');
+(8, 'legal', '6', 'Test Cat61', '58', 'file1', 'ngng', 'file1.docx', '21/10/2021', '7'),
+(9, 'legal', '6', 'Test Cat61', '59', 'Confidentiality Policy', 'new file lorem ispum', 'Confidentiality Policy.docx', '21/10/2021', '7'),
+(10, 'marketing', '10', 'Marketing 1', '2', 'Marketing 1', 'This is marketing 1', 'Marketing 1.docx', '21/10/2021', '7');
 
 -- --------------------------------------------------------
 
@@ -161,7 +165,8 @@ CREATE TABLE `legal_downloads` (
 --
 
 INSERT INTO `legal_downloads` (`date`, `downloads`) VALUES
-('20/10/2021', '4');
+('20/10/2021', '4'),
+('21/10/2021', '3');
 
 -- --------------------------------------------------------
 
@@ -205,7 +210,8 @@ CREATE TABLE `marketing_downloads` (
 --
 
 INSERT INTO `marketing_downloads` (`date`, `downloads`) VALUES
-('20/10/2021', '4');
+('20/10/2021', '4'),
+('21/10/2021', '5');
 
 -- --------------------------------------------------------
 
@@ -223,7 +229,8 @@ CREATE TABLE `total_downloads` (
 --
 
 INSERT INTO `total_downloads` (`date`, `downloads`) VALUES
-('20/10/2021', '10');
+('20/10/2021', '10'),
+('21/10/2021', '8');
 
 -- --------------------------------------------------------
 
@@ -249,7 +256,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`u_id`, `u_name`, `u_email`, `u_pass`, `u_registertimestamp`, `u_lastlogin`, `u_profilepic`, `u_loginstatus`, `legal_downloads`, `marketing_downloads`) VALUES
-(7, 'Sumit', 'k@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '2021-10-20', '20/10/21 15:33:35', 'boy.png', 'active', '0', '0');
+(7, 'Sumit ', 'k@gmail.com', '202cb962ac59075b964b07152d234b70', '2021-10-20', '21/10/21 08:49:30', '7', 'unactive', '3', '2');
 
 --
 -- Indexes for dumped tables
@@ -271,7 +278,7 @@ ALTER TABLE `categories`
 -- Indexes for table `contactus_data`
 --
 ALTER TABLE `contactus_data`
-  ADD PRIMARY KEY (`userid`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `favorites`
@@ -314,10 +321,16 @@ ALTER TABLE `categories`
   MODIFY `cat_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `contactus_data`
+--
+ALTER TABLE `contactus_data`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `f_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `f_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `legal_contracts`

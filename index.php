@@ -1,3 +1,9 @@
+<?php
+if(isset($_SESSION["u_id"])) {
+  header("Location: user/index.php"); 
+  }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -44,7 +50,7 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="index.html">
+              <a class="navbar-brand" href="index.php">
                 <img src="assets/images/logo/logo.svg" alt="Logo" />
               </a>
               <button class="navbar-toggler">
@@ -136,20 +142,20 @@
           <div class="col-lg-12">
             <div class="ud-hero-content wow fadeInUp" data-wow-delay=".2s">
               <h1 class="ud-hero-title">
-                Counsel Suite Title Here
+              Say Yes! To Smart Business
               </h1>
               <p class="ud-hero-desc">
-                Counsel Suit Sub Title Here
+                Compitable with:
               </p>
               <ul class="ud-hero-buttons d-sm-none">
                 <li>
-                  <a href="sign_in.html" class="ud-main-btn ud-login-btn">
+                  <a href="sign_in.php" class="ud-main-btn ud-login-btn">
                     Sign In
                   </a>
                   
                 </li>
                 <li>
-                  <a href="sign_up.html" class="ud-main-btn ud-white-btn">
+                  <a href="sign_up.php" class="ud-main-btn ud-white-btn">
                     Sign Up
                   </a>
                 </li>
@@ -1009,7 +1015,7 @@
           <div class="row">
             <div class="col-xl-3 col-lg-4 col-md-6">
               <div class="ud-widget">
-                <a href="index.html" class="ud-footer-logo">
+                <a href="index.php" class="ud-footer-logo">
                   <img src="assets/images/logo/logo.svg" alt="logo" />
                 </a>
                 <p class="ud-widget-desc">

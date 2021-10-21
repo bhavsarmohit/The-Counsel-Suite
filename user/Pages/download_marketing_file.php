@@ -5,6 +5,7 @@ $filepath="sam";
 if(!isset($_SESSION["u_id"])) {
   header("Location: ../../sign_in.php"); 
 }
+$u_id=$_SESSION["u_id"];
 if(isset($_GET['id'])) {
   $reterived_catid=$_GET['id'];  
  }
@@ -67,6 +68,17 @@ else
   $insert_total_downloads="INSERT INTO marketing_downloads(date,downloads)VALUES('$date','1')";
   $mysqli->query($insert_total_downloads);
 }
+}
+$reterive_user_legal_count = "SELECT * FROM users WHERE u_id='$u_id'";
+$result3 = $mysqli->query($reterive_user_legal_count);
+if ($result3->num_rows > 0) {
+  // output data of each row
+  while($row = $result3->fetch_assoc()) {
+     $total_download_count=$row["marketing_downloads"];
+     $total_download_count=$total_download_count+1;
+     $update_count="UPDATE users SET marketing_downloads='$total_download_count' WHERE u_id='$u_id'";
+     $mysqli->query($update_count);
+  }
 }
 //echo $filepath;
 ?>

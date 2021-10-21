@@ -3,6 +3,11 @@ session_start();
 if(!isset($_SESSION["u_id"])) {
   header("Location: ../../sign_in.php"); 
 }
+$msg="";
+$u_id=$_SESSION["u_id"];
+//$profilepicurl=$_SESSION["u_profilepic"];
+$username=$_SESSION["u_name"];
+$useremail=$_SESSION["u_email"];
 $userid=$_SESSION["u_id"];
 require_once '../../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
@@ -16,7 +21,68 @@ else
   $get_favdata="SELECT * FROM favorites WHERE f_userid='$userid' AND parent_catname='legal'";
   $result = $mysqli->query($get_favdata);
 }
+if(isset($_POST['upload']))
+{
+  $filename = $_FILES["uploadfile"]["name"];
+  $tempname = $_FILES["uploadfile"]["tmp_name"];    
+  $extension = pathinfo($filename, PATHINFO_EXTENSION);
+  $final_file_name=$u_id.".".$extension;
+  $folder = "../profilepic/".$u_id;
+     $sql = "UPDATE users SET u_profilepic='$u_id' WHERE u_id='$u_id'";
+      mysqli_query($mysqli, $sql);
+     if (move_uploaded_file($tempname, $folder))  {
+      $showModalSuccessful="true";
+      $msg="Profile Picture Updated Successfully.";
+      }else{
+        $showModalFailed="true";
+        $msg="Failed to Update Profie Picture.";
+    }
+}
+if (isset($_POST['update_profile'])) {
+  $username = $_POST["username"];
+  $useremail = $_POST["useremail"]; 
 
+  $update_sql = "UPDATE users SET u_name='$username', u_email='$useremail' WHERE u_id='$u_id'";
+  if ($mysqli->query($update_sql) === TRUE) {
+    $showModalSuccessful="true";
+    $msg="Profile Updated Successfully.";
+    $_SESSION["u_name"]=$username;
+    $_SESSION["u_email"]=$useremail;
+  } else {
+    $msg="Failed to Update Profie.";
+    $showModalFailed="true";
+  }
+}
+if (isset($_POST['change_pass'])) {
+  $cur_pass="";
+  $sql = "SELECT * FROM users";
+  $result = $mysqli->query($sql);
+  if ($result->num_rows > 0) {
+  // output data of each row
+  while($row = $result->fetch_assoc()) {
+    $cur_pass=  $row["u_pass"];
+  }
+  $oldPass=$_POST["oldpass"];
+  $newPass=$_POST["newpass"];
+  if($cur_pass==md5($oldPass))
+  {
+    $newPass=md5($newPass);
+    $update_sql = "UPDATE users SET u_pass='$newPass' WHERE u_id='$u_id'";
+    if ($mysqli->query($update_sql) === TRUE) {
+      $showModalSuccessful="true";
+      $msg="Password Changed Successfully.";
+    } else {
+      $msg="Failed to Chanage Password.";
+      $showModalFailed="true";
+    }
+  }
+  else{
+    $msg="Please enter valid current password.";
+    $showModalFailed="true";
+  }
+} 
+ 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,20 +163,20 @@ else
             
             
             
-            <li class="nav-item dropdown no-arrow">
+          <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="../img/boy.png" style="max-width: 60px">
-                <span class="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                <img class="img-profile rounded-circle" src="<?php echo "../profilepic/".$u_id;?>" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $username;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#profileModal">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#changepassword">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Settings
+                  Change Password
                 </a>
                 
                 <div class="dropdown-divider"></div>
@@ -190,6 +256,132 @@ else
 
           <!--Row-->
 
+                     
+      <!-- Modal Profile -->
+      <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">Profile</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <h6 class="m-0 font-weight-bold">Profile Picture</h6>
+                <form method="post" action="" enctype="multipart/form-data">
+                  <center>
+                  <img src="<?php echo "../profilepic/".$u_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 5rem;" accept="image/*">
+                  <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
+                  <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button>
+                  <hr>
+                  </center>
+                </form>
+                  <h6 class="m-0 font-weight-bold" style="padding-bottom: 1rem;" >Personal Info</h6>
+                  <form method="post">
+                  <div class="form-group">
+                      <label for="exampleFormControlInput1">Name</label>
+                      <input type="text" class="form-control" name="username"
+                        placeholder="Enter Name" value="<?php echo $username; ?>" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleFormControlInput1">Email</label>
+                      <input type="email" class="form-control" name="useremail"
+                        placeholder="Enter Email" value="<?php echo $useremail; ?>" required>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                          <button name="update_profile" input type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                      </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+       <!-- Modal password -->
+       <div class="modal fade" id="changepassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">Change Password </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method="post">
+                  <div class="form-group">
+                      <label for="exampleFormControlInput1">Current Password</label>
+                      <input type="password" class="form-control" name="oldpass"
+                        placeholder="Enter Old Password" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleFormControlInput1">New Password</label>
+                      <input type="password" class="form-control" name="newpass"
+                        placeholder="Enter New Password" required>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                          <button name="change_pass" input type="submit" class="btn btn-primary">Change Password</button>
+                        </div>
+                      </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+      <!-- Modal popup Successful -->
+      <div class="modal fade" id="popupModalSuccessful" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Sucesss</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p><?php echo $msg;?></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Modal popup Failed -->
+          <div class="modal fade" id="popupModalFailed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPopout"
+          aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabelPopout">Error</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p><?php echo $msg ?></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+          </div>
+
           <!-- Modal Logout -->
           <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
             aria-hidden="true">
@@ -206,7 +398,7 @@ else
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
-                  <a href="login.html" class="btn btn-primary">Logout</a>
+                  <a href="../logout.php" class="btn btn-primary">Logout</a>
                 </div>
               </div>
             </div>
@@ -261,6 +453,24 @@ function searchFunction() {
   }
 }
 </script>
+<?php			
+  if(!empty($showModalSuccessful)) {
+    // CALL MODAL HERE
+    echo '<script type="text/javascript">
+      $(document).ready(function(){
+        $("#popupModalSuccessful").modal("show");
+      });
+    </script>';
+  } 
+  if(!empty($showModalFailed)) {
+    // CALL MODAL HERE
+    echo '<script type="text/javascript">
+      $(document).ready(function(){
+        $("#popupModalFailed").modal("show");
+      });
+    </script>';
+  } 
+  ?>
 </body>
 
 </html>
