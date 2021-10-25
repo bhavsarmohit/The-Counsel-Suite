@@ -211,6 +211,16 @@ if (isset($_POST['updatePassword'])) {
         </div>
       </li>
       <hr class="sidebar-divider">
+      <div class="sidebar-heading">
+        General
+      </div>
+      <li class="nav-item">
+        <a class="nav-link" href="user_queries.php">
+          <i class="fas fa-fw fa-window-maximize"></i>
+          <span>User Queries</span></a>
+
+      </li>
+      <hr class="sidebar-divider">
       
       
       <div class="version" id="version-ruangadmin"></div>

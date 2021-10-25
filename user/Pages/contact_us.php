@@ -180,7 +180,7 @@ if (isset($_POST['change_pass'])) {
           <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle" src="<?php echo "../profilepic/".$u_id;?>" style="max-width: 60px">
+                <img class="img-profile rounded-circle" src="<?php if(file_exists("../profilepic/".$u_id)){echo "../profilepic/".$u_id;}else{echo "../profilepic/boy.png";} ?>" style="max-width: 60px">
                 <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $username;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -307,7 +307,7 @@ if (isset($_POST['change_pass'])) {
                 <h6 class="m-0 font-weight-bold">Profile Picture</h6>
                 <form method="post" action="" enctype="multipart/form-data">
                   <center>
-                  <img src="<?php echo "../profilepic/".$u_id;?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 5rem;" accept="image/*">
+                  <img src="<?php if(file_exists("../profilepic/".$u_id)){echo "../profilepic/".$u_id;}else{echo "../profilepic/boy.png";} ?>" class="rounded-circle mx-auto d-block" alt="100x100" style="width: 5rem;" accept="image/*">
                   <input type="file" style="margin-top: 1rem; padding-left: 8rem; "accept="image/x-png,image/jpeg" name="uploadfile" required/>
                   <button input type="submit" name="upload" class="btn btn-primary" style="margin-top: 1rem;">Upload</button>
                   <hr>
