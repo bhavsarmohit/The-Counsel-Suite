@@ -246,7 +246,7 @@ if (isset($_POST['change_pass'])) {
           <div class="col-lg-6">
             <div class="card mb-4">
               <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h5 class="m-0 font-weight-bold " style="color:#3f51b5;" >Legal Contarcts</h5>
+                <h5 class="m-0 font-weight-bold " style="color:#3f51b5;" >Legal Contracts</h5>
               </div>
               <div class="card-body">
                 <center><button class="btn1 success1"><i class="fa fa-university fa-3x"></i></button></center>
@@ -264,11 +264,16 @@ if (isset($_POST['change_pass'])) {
                         }
                       } else {
                         echo '<option value="">Not Found</option>';
-                      } 
+                      }
+                      // if($select2Single==1){ print "selected"; }
                     ?>
-                </select>      
+                </select> 
+                
+                
                 <a href="Pages/view_legal_contracts.php"> <button type="submit" name="view_legal" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button></a>
                 </form>
+                <button onclick="hideshowElement()" >Hide/Unhide</button>
+                <div id="select2Single_subFile">helloww</div>
               </div>
             </div>
           </div>
@@ -481,10 +486,39 @@ if (isset($_POST['change_pass'])) {
   <script src="js/ruang-admin.min.js"></script>
   <script src="vendor/chart.js/Chart.min.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>  
+
+  <script>
+function hideshowElement() {
+  var x = document.getElementById("select2Single_subFile");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+
+
+}
+</script>
+
   <!-- Select2 -->
   <script src="vendor/select2/dist/js/select2.min.js"></script>
   <script>
+
+    // var file = $('#select2Single');
+    // var subFile = $('#select2Single_subFile');
+    // if (file.val() === '') {
+    //     alert("Please select an item from the list and then proceed!");
+        
+    //     // $('#selBooks').focus();
+
+    //     return false;
+    // }else{
+    //   subFileSelectionShow();
+    // }
+
     $(document).ready(function () {
+
+      
 
 
       $('.select2-single').select2();
@@ -493,6 +527,9 @@ if (isset($_POST['change_pass'])) {
      
     });
   </script>
+  
+
+
   <?php			
   if(!empty($showModalSuccessful)) {
     // CALL MODAL HERE
