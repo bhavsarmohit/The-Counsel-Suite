@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../database/config.php';
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if(isset($_SESSION["adminname"])) {
   $admin_name=$_SESSION["adminname"];
   $pic_url=$_SESSION["adminprofilepic"];

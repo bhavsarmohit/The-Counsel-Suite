@@ -8,7 +8,7 @@ header("Pragma: no-cache");
 session_start();
 require_once '../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 $u_id=$_SESSION["u_id"];
 if(!isset($_SESSION["u_id"])) {
   $update_sql = "UPDATE users SET u_loginstatus='unactive' WHERE u_id='$u_id'";
@@ -272,8 +272,6 @@ if (isset($_POST['change_pass'])) {
                 
                 <a href="Pages/view_legal_contracts.php"> <button type="submit" name="view_legal" style="margin-top: .5rem; float: right;" class="btn btn-primary">Submit</button></a>
                 </form>
-                <button onclick="hideshowElement()" >Hide/Unhide</button>
-                <div id="select2Single_subFile">helloww</div>
               </div>
             </div>
           </div>
@@ -487,18 +485,7 @@ if (isset($_POST['change_pass'])) {
   <script src="vendor/chart.js/Chart.min.js"></script>
   <script src="js/demo/chart-area-demo.js"></script>  
 
-  <script>
-function hideshowElement() {
-  var x = document.getElementById("select2Single_subFile");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-
-
-}
-</script>
+  
 
   <!-- Select2 -->
   <script src="vendor/select2/dist/js/select2.min.js"></script>

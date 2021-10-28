@@ -8,7 +8,7 @@ if(isset($_SESSION["u_id"])) {
 require_once 'database/config.php';
 $t=time();
 $time_stamp = date('d/m/y H:i:s');
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();

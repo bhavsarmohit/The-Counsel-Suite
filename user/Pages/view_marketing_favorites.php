@@ -11,7 +11,7 @@ $username=$_SESSION["u_name"];
 $useremail=$_SESSION["u_email"];
 require_once '../../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();

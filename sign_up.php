@@ -2,7 +2,7 @@
 require_once 'database/config.php';
 $t=time();
 $time_stamp=date("Y-m-d",$t);
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();

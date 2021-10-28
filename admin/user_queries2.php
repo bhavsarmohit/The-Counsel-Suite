@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../database/config.php';
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if(isset($_SESSION["adminname"])) {
   $admin_name=$_SESSION["adminname"];
   $pic_url=$_SESSION["adminprofilepic"];
@@ -12,7 +12,7 @@ if(isset($_SESSION["adminname"])) {
 {
   header("Location:../index.php");
 }
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();

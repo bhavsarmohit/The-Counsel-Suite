@@ -4,7 +4,7 @@ $adminid=$_SESSION['id'];
 $upload = 'err';
 $date = date('Y/m/d H:i:s');
 require_once '../../database/config.php';
-$mysqli = new mysqli($hn,$un,"",$db); 
+$mysqli = new mysqli($hn,$un,$pw,$db); 
 $contract_id=$_POST['c_id'];
   
 if(!empty($_FILES['file'])){ 

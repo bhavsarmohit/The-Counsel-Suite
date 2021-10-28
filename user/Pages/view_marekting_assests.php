@@ -12,7 +12,7 @@ require_once '../../database/config.php';
 $time_stamp = date('d/m/y H:i:s');
 $cat_id=$_SESSION['cat_id'];
 $cat_name=$_SESSION['cat_name'];
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();

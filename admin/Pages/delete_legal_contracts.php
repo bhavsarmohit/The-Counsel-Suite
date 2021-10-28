@@ -19,7 +19,7 @@ else
 {
   header("Location:../index.php");
 }
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 
 if ($mysqli -> connect_errno) {
     header("Location: legal_contracts_view.php");

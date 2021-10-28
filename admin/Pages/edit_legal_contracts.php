@@ -7,7 +7,7 @@ $admin_name=$_SESSION["adminname"];
 $a_email=$_SESSION["adminemail"];
 require_once '../../database/config.php';
 $date = date('Y/m/d H:i:s');
-$mysqli = new mysqli($hn,$un,"",$db);
+$mysqli = new mysqli($hn,$un,$pw,$db);
 if ($mysqli -> connect_errno) {
   echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
   exit();
