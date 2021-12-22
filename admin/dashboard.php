@@ -202,13 +202,13 @@ if (isset($_POST['updatePassword'])) {
                 <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $admin_name;?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#profileModal"">
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#profileModal">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
                 <!-- <div class="dropdown-divider"></div> -->
                 
-                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#changePasswordModal"">
+                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#changePasswordModal">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Change Password
                 </a>
@@ -232,6 +232,10 @@ if (isset($_POST['updatePassword'])) {
               <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
             </ol>
           </div>
+
+          <!-- <a href="pages/auto_add_legal_category_developersFile copy.php">
+            <button>Add Category(DEVELOPER_ONLY)</button>
+          </a> -->
 
           <div class="row mb-3">
             <!-- Earnings (Monthly) Card Example -->
